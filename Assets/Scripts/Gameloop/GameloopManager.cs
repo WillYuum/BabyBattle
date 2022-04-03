@@ -4,6 +4,11 @@ using UnityEngine;
 using Utils.GenericSingletons;
 using System;
 
+
+
+public enum PlayerControl { MainCharacter, Camera };
+public enum EntityDirection { Left, Right };
+
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
     public event Action<PlayerControl> OnSwitchPlayerControl;

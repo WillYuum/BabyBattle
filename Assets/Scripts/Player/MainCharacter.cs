@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utils.GenericSingletons;
+using Troops;
 
-public enum PlayerControl { MainCharacter, Camera };
 
 public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
 {

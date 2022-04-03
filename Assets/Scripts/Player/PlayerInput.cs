@@ -2,110 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utils.GenericSingletons;
+using Player.Controls;
 
-public class PlayerInput : MonoBehaviour
+
+namespace Player.InputsController
 {
-    private CameraControlState _cameraControlState = new CameraControlState();
-    private MainCharacterState _mainCharacterState = new MainCharacterState();
-
-    private IPlayerInput _currentPlayerInput;
-
-
-    void Awake()
+    public class PlayerInput : MonoBehaviour
     {
-        _cameraControlState.Init(this);
-        _mainCharacterState.Init(this);
+        private CameraControlState _cameraControlState = new CameraControlState();
+        private MainCharacterState _mainCharacterState = new MainCharacterState();
 
-        _currentPlayerInput = _mainCharacterState;
-    }
-
-    void Update()
-    {
-        _currentPlayerInput.CheckInput();
-    }
+        private IPlayerInput _currentPlayerInput;
 
 
-    public void HandlePlayerMove(EntityDirection direction)
-    {
-        MainCharacter.instance.Move(direction);
-    }
-
-
-    public void HandlePlayerClickedOnMouse()
-    {
-        MainCharacter.instance.Attack();
-    }
-
-
-    public void ClickedOnSwitchPlayerControl(PlayerControl playerControl)
-    {
-        GameloopManager.instance.SwitchPlayerControl();
-    }
-
-}
-
-
-public class CameraControlState : IPlayerInput
-{
-    public override void CheckInput()
-    {
-        base.CheckInput();
-    }
-
-}
-
-public class MainCharacterState : IPlayerInput
-{
-    public override void CheckInput()
-    {
-        base.CheckInput();
-
-        float hor = Input.GetAxis("Horizontal");
-
-
-        if (Input.GetKey(KeyCode.A))
+        void Awake()
         {
-            _playerInput.HandlePlayerMove(EntityDirection.Left);
+            _cameraControlState.Init(this);
+            _mainCharacterState.Init(this);
+
+            _currentPlayerInput = _mainCharacterState;
         }
-        else if (Input.GetKey(KeyCode.D))
+
+        void Update()
         {
-            _playerInput.HandlePlayerMove(EntityDirection.Right);
-        }
-        else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
-        {
-            if (Input.GetKeyUp(KeyCode.A))
-            {
-                _playerInput.HandlePlayerMove(EntityDirection.Left);
-            }
-            else if (Input.GetKeyUp(KeyCode.D))
-            {
-                _playerInput.HandlePlayerMove(EntityDirection.Right);
-            }
+            _currentPlayerInput.CheckInput();
         }
 
 
-        if (Input.GetMouseButtonDown(0))
+        public void HandlePlayerMove(EntityDirection direction)
         {
-            _playerInput.HandlePlayerClickedOnMouse();
+            MainCharacter.instance.Move(direction);
         }
-    }
-}
 
 
-public class IPlayerInput
-{
-    protected PlayerInput _playerInput;
-
-    public void Init(PlayerInput playerInput)
-    {
-        _playerInput = playerInput;
-    }
-
-    public virtual void CheckInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        public void HandlePlayerClickedOnMouse()
         {
-            _playerInput.ClickedOnSwitchPlayerControl(PlayerControl.Camera);
+            MainCharacter.instance.Attack();
         }
+
+
+        public void ClickedOnSwitchPlayerControl(PlayerControl playerControl)
+        {
+            GameloopManager.instance.SwitchPlayerControl();
+        }
+
     }
 }

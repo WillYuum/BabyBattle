@@ -17,6 +17,15 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
 
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var damageAction = new TroopTakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.LargeBaby };
+            TakeDamage(damageAction);
+        }
+    }
+
     public void HandleShoot(EntityDirection direction)
     {
         float shootDir = direction == EntityDirection.Left ? -1.0f : 1.0f;
@@ -46,10 +55,10 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
 
     public void TakeDamage(TroopTakeDamageAction action)
     {
-        _currentHealth -= action.damageAmount;
+        _currentHealth -= action.DamageAmount;
         if (_currentHealth <= 0)
         {
-            Die();
+            Invoke(nameof(Die), 1.0f);
         }
     }
 

@@ -19,8 +19,13 @@ namespace Troops
 
     public struct TroopTakeDamageAction
     {
-        public float damageAmount;
-        public TroopType damagedByTroop;
+        public float DamageAmount;
+        public TroopType DamagedByTroop;
+        public TroopTakeDamageAction(int damageAmount, TroopType damagedByTroop)
+        {
+            DamageAmount = damageAmount;
+            DamagedByTroop = damagedByTroop;
+        }
     }
 
 
@@ -38,8 +43,8 @@ namespace Troops
         {
             var damageAction = new TroopTakeDamageAction
             {
-                damageAmount = _attackDamage,
-                damagedByTroop = _troopType,
+                DamageAmount = _attackDamage,
+                DamagedByTroop = _troopType,
             };
 
 
@@ -55,7 +60,7 @@ namespace Troops
 
         public virtual void TakeDamage(TroopTakeDamageAction damageAction)
         {
-            _currentHealth -= damageAction.damageAmount;
+            _currentHealth -= damageAction.DamageAmount;
             if (_currentHealth <= 0)
             {
                 Die();

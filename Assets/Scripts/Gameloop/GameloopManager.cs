@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils.GenericSingletons;
 using System;
-
-
+using UnityEngine.SceneManagement;
 
 public enum PlayerControl { MainCharacter, Camera };
 public enum EntityDirection { Left, Right };
+
+
+public enum GameState
+{
+    MainMenu,
+    Gameplay,
+    GameOver,
+    Paused,
+}
 
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
@@ -15,7 +23,16 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public PlayerControl _playerControl { get; private set; }
 
 
+    public GameState CurrentGameState { get; private set; }
+
     public event Action OnMainCharacterDied;
+    public event Action OnLoseGame;
+
+
+    void Awake()
+    {
+        CurrentGameState = GameState.Gameplay;
+    }
 
 
 
@@ -38,6 +55,14 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         OnMainCharacterDied?.Invoke();
         OnMainCharacterDied = null;
+
+        OnLoseGame?.Invoke();
+        OnLoseGame = null;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 }

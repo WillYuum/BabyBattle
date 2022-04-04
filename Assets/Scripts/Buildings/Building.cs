@@ -1,23 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Troops;
+using GameplayUI.Helpers;
 
 public enum BuildingType { SmallBulding, LargeBuilding };
 
 public class Building : MonoBehaviour
 {
+    private float _startingHealth = 100f;
     private float _currentHealth;
 
-    private List<Troop> _troops = new List<Troop>();
+    [SerializeField] private HealthBarUI _healthBarUI;
+
+    // private List<Troop> _troops = new List<Troop>();
+
+
+    void Awake()
+    {
+        _currentHealth = _startingHealth;
+        _healthBarUI.Init();
+    }
 
     public void TakeDamage(BuildingTakeDamageAction damageAction)
     {
         _currentHealth -= damageAction.damageAmountOnBuilding;
-
+        _healthBarUI.SetHealth(_currentHealth / _startingHealth, 0.1f);
 
         if (_currentHealth <= 0)
         {
-            MakeTroopsLeaveBuilding(damageAction);
+            // MakeTroopsLeaveBuilding(damageAction);
             DestroyBuilding();
         }
     }
@@ -27,18 +39,30 @@ public class Building : MonoBehaviour
         Destroy(gameObject, 2.0f);
     }
 
-    private void MakeTroopsLeaveBuilding(BuildingTakeDamageAction damageAction)
-    {
-        var troopTakeDamageAction = new TroopTakeDamageAction
-        {
-            damageAmount = damageAction.damageAmountOnTroop,
-            damagedByTroop = damageAction.damageByTroop,
-        };
+    // private void MakeTroopsLeaveBuilding(BuildingTakeDamageAction damageAction)
+    // {
+    //     if (_troops.Count == 0) return;
 
-        foreach (Troop troop in _troops)
+    //     var troopTakeDamageAction = new TroopTakeDamageAction
+    //     {
+    //         DamageAmount = damageAction.damageAmountOnTroop,
+    //         DamagedByTroop = damageAction.damageByTroop,
+    //     };
+
+    //     foreach (Troop troop in _troops)
+    //     {
+    //         troop.TakeDamage(troopTakeDamageAction);
+    //     }
+    // }
+
+    private void OnMouseDown()
+    {
+        TakeDamage(new BuildingTakeDamageAction
         {
-            troop.TakeDamage(troopTakeDamageAction);
-        }
+            damageAmountOnBuilding = 10f,
+            damageAmountOnTroop = 10f,
+            damageByTroop = TroopType.BabyTroop,
+        });
     }
 }
 

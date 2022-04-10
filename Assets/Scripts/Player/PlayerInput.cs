@@ -12,7 +12,7 @@ namespace Player.InputsController
         private CameraControlState _cameraControlState = new CameraControlState();
         private MainCharacterState _mainCharacterState = new MainCharacterState();
 
-        private IPlayerInput _currentPlayerInput;
+        private PlayerInputState _currentPlayerInput;
 
 
         void Awake()
@@ -20,12 +20,25 @@ namespace Player.InputsController
             _cameraControlState.Init(this);
             _mainCharacterState.Init(this);
 
-            _currentPlayerInput = _mainCharacterState;
+            GameloopManager.instance.OnSwitchPlayerControl += OnPlayerControlSwitch;
         }
 
         void Update()
         {
             _currentPlayerInput.CheckInput();
+        }
+
+
+        private void OnPlayerControlSwitch(PlayerControl playerControl)
+        {
+            if (playerControl == PlayerControl.MainCharacter)
+            {
+                _currentPlayerInput = _mainCharacterState;
+            }
+            else
+            {
+                _currentPlayerInput = _cameraControlState;
+            }
         }
 
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils.GenericSingletons;
 using Troops;
-
+using HUDCore;
 
 public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
 {
@@ -12,9 +12,12 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
     private bool _shouldMove = false;
     private float _currentHealth = 100.0f;
 
+    public Vector2 GetPos { get { return transform.position; } }
+
     private void Awake()
     {
-
+        _currentHealth = 100.0f;
+        HUD.instance.OnUpdatePlayerHealth.Invoke(_currentHealth / 100.0f);
     }
 
     private void Update()
@@ -56,6 +59,8 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
     public void TakeDamage(TroopTakeDamageAction action)
     {
         _currentHealth -= action.DamageAmount;
+        HUD.instance.OnUpdatePlayerHealth.Invoke(_currentHealth / 100.0f);
+
         if (_currentHealth <= 0)
         {
             Invoke(nameof(Die), 1.0f);

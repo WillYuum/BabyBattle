@@ -5,7 +5,7 @@ using Player.InputsController;
 
 namespace Player.Controls
 {
-    public class CameraControlState : IPlayerInput
+    public class CameraControlState : PlayerInputState
     {
         public override void CheckInput()
         {
@@ -14,7 +14,7 @@ namespace Player.Controls
 
     }
 
-    public class MainCharacterState : IPlayerInput
+    public class MainCharacterState : PlayerInputState
     {
         public override void CheckInput()
         {
@@ -52,7 +52,7 @@ namespace Player.Controls
     }
 
 
-    public class IPlayerInput
+    public abstract class PlayerInputState
     {
         protected PlayerInput _playerInput;
 

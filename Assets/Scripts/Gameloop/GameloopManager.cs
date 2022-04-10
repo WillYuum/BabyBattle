@@ -4,50 +4,50 @@ using UnityEngine;
 using Utils.GenericSingletons;
 using System;
 using UnityEngine.SceneManagement;
+using HUDCore;
 
-public enum PlayerControl { MainCharacter, Camera };
-public enum EntityDirection { Left, Right };
+public enum PlayerControl { None, MainCharacter, Camera };
+public enum EntityDirection { Idle, Left, Right };
 
-
-public enum GameState
-{
-    MainMenu,
-    Gameplay,
-    GameOver,
-    Paused,
-}
 
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
     public event Action<PlayerControl> OnSwitchPlayerControl;
-    public PlayerControl _playerControl { get; private set; }
+
+    public PlayerControl PlayerControl { get; private set; }
 
 
-    public GameState CurrentGameState { get; private set; }
+
 
     public event Action OnMainCharacterDied;
     public event Action OnLoseGame;
 
 
-    void Awake()
+    void Start()
     {
-        CurrentGameState = GameState.Gameplay;
+        StartGameLoop();
     }
 
+    public void StartGameLoop()
+    {
+        PlayerControl = PlayerControl.MainCharacter;
+        OnSwitchPlayerControl.Invoke(PlayerControl);
+    }
 
 
     public void SwitchPlayerControl()
     {
-        if (_playerControl == PlayerControl.MainCharacter)
+        if (PlayerControl == PlayerControl.MainCharacter)
         {
-            _playerControl = PlayerControl.Camera;
+            PlayerControl = PlayerControl.Camera;
         }
         else
         {
-            _playerControl = PlayerControl.MainCharacter;
+            PlayerControl = PlayerControl.MainCharacter;
         }
 
-        OnSwitchPlayerControl?.Invoke(_playerControl);
+
+        OnSwitchPlayerControl?.Invoke(PlayerControl);
     }
 
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HUD.Screens
+namespace HUDCore.Screens
 {
     public class GameOverScreen : MonoBehaviour
     {

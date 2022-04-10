@@ -21,6 +21,13 @@ namespace GameplayUI.Helpers
             if (healthRatio > 1)
             {
                 Debug.LogError("Health ratio is greater than 1, make sure you are not passing in a value greater than 1");
+                Debug.LogError("Issue happened in: " + gameObject.name + " with value of: " + healthRatio);
+            }
+
+            if (_slider == null)
+            {
+                Debug.LogError("Slider is null, make sure you have initialized the slider");
+                Init();
             }
 #endif
 

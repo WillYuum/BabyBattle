@@ -1,21 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
+using GameplayUI.Helpers;
+using TMPro;
 using UnityEngine;
-
-namespace HUD.Screens
+namespace HUDCore.Screens
 {
     public class GameScreen : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        [SerializeField] private HealthBarUI _playerHealthBar;
 
+        [SerializeField] private TextMeshProUGUI tabKeyText;
+
+        void Awake()
+        {
+            InitGameScreen();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void InitGameScreen()
         {
+            HUD.instance.OnUpdatePlayerHealth += UpdatePlayerHealth;
 
+            GameloopManager.instance.OnSwitchPlayerControl += SwitchUIForPlayerControl;
+
+            _playerHealthBar.Init();
         }
+
+        private void UpdatePlayerHealth(float health)
+        {
+            _playerHealthBar.SetHealth(health);
+        }
+
+        private void SwitchUIForPlayerControl(PlayerControl playerControl)
+        {
+            if (playerControl == PlayerControl.Camera)
+            {
+                tabKeyText.text = "Switch to:\nMainCharacter";
+            }
+            else
+            {
+                tabKeyText.text = "Switch to:\nCamera";
+            }
+        }
+
     }
 }

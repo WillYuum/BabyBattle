@@ -20,6 +20,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
 
     public event Action OnMainCharacterDied;
+    public event Action OnGameLoopStarted;
     public event Action OnLoseGame;
 
 
@@ -32,6 +33,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         PlayerControl = PlayerControl.MainCharacter;
         OnSwitchPlayerControl.Invoke(PlayerControl);
+
+
+        OnGameLoopStarted.Invoke();
     }
 
 

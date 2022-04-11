@@ -38,7 +38,6 @@ namespace Troops
         protected float _attackDamage { get; private set; }
         protected Vector2 _moveDirection { get; private set; }
 
-
         public virtual void Attack()
         {
             var damageAction = new TroopTakeDamageAction

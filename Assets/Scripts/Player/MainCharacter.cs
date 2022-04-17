@@ -12,6 +12,8 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
     private bool _shouldMove = false;
     private float _currentHealth = 100.0f;
 
+    [SerializeField] private GameObject _characterVisual;
+
     public Vector2 GetPos { get { return transform.position; } }
 
     private void Awake()
@@ -49,7 +51,19 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
 
     public void Move(EntityDirection direction)
     {
+        if (_moveDirection == EntityDirection.Left)
+        {
+            _characterVisual.transform.localScale = -Vector3.one;
+        }
+        else
+        {
+            _characterVisual.transform.localScale = Vector3.one;
+        }
+
+
         _moveDirection = direction;
+
+
         float moveDir = direction == EntityDirection.Left ? -1.0f : 1.0f;
 
         Vector3 move = new Vector3(moveDir * _moveSpeed, 0, 0);
@@ -71,6 +85,19 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
     {
         float moveDir = _moveDirection == EntityDirection.Left ? -1.0f : 1.0f;
 
+        Vector3 shootDir = new Vector3(moveDir, 0, 0);
+
+        RaycastHit2D hit2D = Physics2D.Raycast(transform.position, shootDir, 5.0f, LayerMask.GetMask("Enemy"));
+
+        if (hit2D.collider == null) return;
+
+        if (hit2D.collider.TryGetComponent<Troop>(out Troop enemy))
+        {
+            //FIXME: Damaged by troop should be by player, but do I need to pass the main character troop type?
+            var damageAction = new TroopTakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.LargeBaby };
+
+            enemy.TakeDamage(damageAction);
+        }
     }
 
     public void Die()

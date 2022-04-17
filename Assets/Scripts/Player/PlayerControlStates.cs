@@ -20,8 +20,6 @@ namespace Player.Controls
         {
             base.CheckInput();
 
-            float hor = Input.GetAxis("Horizontal");
-
 
             if (Input.GetKey(KeyCode.A))
             {

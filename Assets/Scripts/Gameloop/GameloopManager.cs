@@ -54,6 +54,12 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         OnSwitchPlayerControl?.Invoke(PlayerControl);
     }
 
+    public void MainBuildingDestroyed()
+    {
+        OnLoseGame?.Invoke();
+        OnLoseGame = null;
+    }
+
 
     public void MainCharacterDied()
     {

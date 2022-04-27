@@ -15,6 +15,10 @@ namespace GameplayUI.Helpers
             _slider = GetComponent<Slider>();
         }
 
+
+        /// <summary>
+        /// <param> healthRatio: Value should be between 0 and 1 so it can diplay properly on UI</param>
+        /// </summary>
         public void SetHealth(float healthRatio, float tweenToDuration = 0f)
         {
 #if UNITY_EDITOR

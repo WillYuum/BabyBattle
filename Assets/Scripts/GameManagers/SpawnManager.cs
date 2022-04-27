@@ -34,14 +34,13 @@ namespace SpawnManagerCore
             // GameloopManager.instance.OnLoseGame += () => ToggleSpawnEnemy(false);
         }
 
-        public Troop SpawnFriendlyTroop(TroopType troopType)
+        public Troop SpawnFriendlyTroop(TroopType troopType, Vector3 position)
         {
             for (int i = 0; i < _friendlyTroopsPrefabs.Length; i++)
             {
                 if (_friendlyTroopsPrefabs[i].troopType == troopType)
                 {
-                    var mousePositionToWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    return _friendlyTroopsPrefabs[i].prefabConfig.CreateGameObject(mousePositionToWorldPosition, Quaternion.identity).GetComponent<Troop>();
+                    return _friendlyTroopsPrefabs[i].prefabConfig.CreateGameObject(position, Quaternion.identity).GetComponent<Troop>();
                 }
             }
 

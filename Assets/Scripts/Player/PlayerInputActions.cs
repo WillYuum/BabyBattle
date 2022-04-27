@@ -11,9 +11,7 @@ namespace Player.InputsController
 {
     public class PlayerInputActions : MonoBehaviour
     {
-        private TryingToSpawnCharacter _tryingToSpawnTroop = new TryingToSpawnCharacter();
         private PlayerIdleState _playerIdleState = new PlayerIdleState();
-        private CanSpawnTroopState _canSpawnTroopState = new CanSpawnTroopState();
 
         private PlayerInputState _currentPlayerInput;
 
@@ -24,9 +22,7 @@ namespace Player.InputsController
 
         void Awake()
         {
-            _tryingToSpawnTroop.Init(this);
             _playerIdleState.Init(this);
-            _canSpawnTroopState.Init(this);
 
 
             _currentPlayerInput = _playerIdleState;
@@ -52,61 +48,25 @@ namespace Player.InputsController
 
         public void OnClickInIdle()
         {
-            print("CLICKED ON " + EventSystem.current.currentSelectedGameObject.name);
-            if (EventSystem.current.currentSelectedGameObject.CompareTag("Card"))
+            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 0f, LayerMask.GetMask("Building"));
+            if (hit.collider)
             {
-                var card = EventSystem.current.currentSelectedGameObject.GetComponent<InteractableUI.TroopCard>();
+                if (hit.collider.TryGetComponent<MainCamp>(out var mainCamp))
+                {
+                    //Switch direction of spawning troops
+                }
 
-
-                _spawnedTroop = SpawnManager.instance.SpawnFriendlyTroop(card.TroopType).gameObject;
-                StartingMousePos = Input.mousePosition;
-
-                _currentPlayerInput = _tryingToSpawnTroop;
+                return;
             }
-        }
 
-        public void OnSwipeWithSpawnCharacter()
-        {
-            if (_spawnedTroop == null) return;
-
-            Vector3 newTroopPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            newTroopPos.z = 0;
-            _spawnedTroop.transform.position = newTroopPos;
-            // _currentPlayerInput = _canSpawnTroopState;
-
-        }
+            // if (EventSystem.current.currentSelectedGameObject.CompareTag("Card"))
+            // {
+            //     var card = EventSystem.current.currentSelectedGameObject.GetComponent<InteractableUI.TroopCard>();
 
 
-        public void EnterTryingToSpawnTroopState()
-        {
-            _currentPlayerInput = _tryingToSpawnTroop;
-
-            //Maybe switch from troop visual to card visual
-        }
-
-        public void EnterCanSpawnTroopState()
-        {
-            _currentPlayerInput = _canSpawnTroopState;
-        }
-
-        public void InvokeSpawnTroop()
-        {
-            if (_spawnedTroop == null) return;
-
-            _currentPlayerInput = _playerIdleState;
-            _spawnedTroop = null;
-        }
-
-
-        public void HandlePlayerClickedOnMouse()
-        {
-            MainCharacter.instance.Attack();
-        }
-
-
-        public void ClickedOnSwitchPlayerControl(PlayerControl playerControl)
-        {
-            GameloopManager.instance.SwitchPlayerControl();
+            //     _spawnedTroop = SpawnManager.instance.SpawnFriendlyTroop(card.TroopType).gameObject;
+            //     StartingMousePos = Input.mousePosition;
+            // }
         }
     }
 }

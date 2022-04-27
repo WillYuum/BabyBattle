@@ -11,7 +11,7 @@ namespace Troops
 
     public interface TroopActions
     {
-        void Move(EntityDirection direction);
+        void Move();
         void TakeDamage(TroopTakeDamageAction action);
         void Attack();
         void Die();
@@ -38,6 +38,12 @@ namespace Troops
         protected float _attackDamage { get; private set; }
         protected Vector2 _moveDirection { get; private set; }
 
+        public void InitTroop(EntityDirection moveDir)
+        {
+            _moveSpeed = 5.0f;
+            _moveDirection = moveDir == EntityDirection.Left ? Vector2.left : Vector2.right;
+        }
+
         public virtual void Attack()
         {
             var damageAction = new TroopTakeDamageAction
@@ -52,9 +58,14 @@ namespace Troops
             //If target is hit, get the target's IDamageable interface and call TakeDamage() and pass the  damage action
         }
 
-        public virtual void Move(EntityDirection troopDirection)
+        void Update()
         {
+            Move();
+        }
 
+        public virtual void Move()
+        {
+            transform.position += (Vector3)_moveDirection * _moveSpeed * Time.deltaTime;
         }
 
         public virtual void TakeDamage(TroopTakeDamageAction damageAction)

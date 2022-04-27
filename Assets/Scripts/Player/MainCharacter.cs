@@ -5,7 +5,7 @@ using Utils.GenericSingletons;
 using Troops;
 using HUDCore;
 
-public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
+public class MainCharacter : MonoBehaviourSingleton<MainCharacter>/* , TroopActions */
 {
     [SerializeField] private float _moveSpeed = 3.0f;
     private EntityDirection _moveDirection = EntityDirection.Right;

@@ -4,11 +4,22 @@ using UnityEngine;
 using Utils.GenericSingletons;
 using Utils.ArrayUtils;
 using GameplayUtils.Prefabs;
+using Troops;
 
 namespace SpawnManagerCore
 {
+    [System.Serializable]
+    public struct TroopPrefabConfig
+    {
+        public TroopType troopType;
+        public PrefabConfig prefabConfig;
+    }
     public class SpawnManager : MonoBehaviourSingleton<SpawnManager>
     {
+
+        [SerializeField] private TroopPrefabConfig[] _friendlyTroopsPrefabs;
+
+
         [SerializeField] private PseudoRandArray<Transform> _enemyTroopSpawnPoints;
 
 
@@ -19,8 +30,26 @@ namespace SpawnManagerCore
 
         void Awake()
         {
-            GameloopManager.instance.OnGameLoopStarted += () => ToggleSpawnEnemy(true);
-            GameloopManager.instance.OnLoseGame += () => ToggleSpawnEnemy(false);
+            // GameloopManager.instance.OnGameLoopStarted += () => ToggleSpawnEnemy(true);
+            // GameloopManager.instance.OnLoseGame += () => ToggleSpawnEnemy(false);
+        }
+
+        public Troop SpawnFriendlyTroop(TroopType troopType)
+        {
+            for (int i = 0; i < _friendlyTroopsPrefabs.Length; i++)
+            {
+                if (_friendlyTroopsPrefabs[i].troopType == troopType)
+                {
+                    var mousePositionToWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    return _friendlyTroopsPrefabs[i].prefabConfig.CreateGameObject(mousePositionToWorldPosition, Quaternion.identity).GetComponent<Troop>();
+                }
+            }
+
+#if UNITY_EDITOR
+            Debug.LogError("No prefab found for troop type: " + troopType);
+#endif
+
+            return null;
         }
 
 

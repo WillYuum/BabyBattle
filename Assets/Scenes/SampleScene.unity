@@ -1545,6 +1545,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28eada4c7f05fb45bbd7a85a1ab32a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _friendlyTroopsPrefabs:
+  - troopType: 0
+    prefabConfig:
+      prefab: {fileID: 8105742366708466321, guid: 2fa19576f087fca4995ed5320b18af2a, type: 3}
+  - troopType: 1
+    prefabConfig:
+      prefab: {fileID: 4094519946160955849, guid: 57844fd6dc8e62849b92e69652e84e7b, type: 3}
   _enemyTroopSpawnPoints:
     _array:
     - {fileID: 2070721246}

@@ -35,7 +35,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         OnSwitchPlayerControl.Invoke(PlayerControl);
 
 
-        OnGameLoopStarted.Invoke();
+        OnGameLoopStarted?.Invoke();
     }
 
 

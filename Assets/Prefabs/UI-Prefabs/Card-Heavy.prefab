@@ -170,6 +170,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card-Heavy
       objectReference: {fileID: 0}
+    - target: {fileID: 8293713010691516646, guid: ece05eb25d0a6ec46a68504d09fa396d, type: 3}
+      propertyPath: _troopType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ece05eb25d0a6ec46a68504d09fa396d, type: 3}
 --- !u!224 &4736105616933823582 stripped

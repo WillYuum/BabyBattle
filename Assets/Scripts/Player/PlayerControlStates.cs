@@ -1,70 +1,88 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Player.InputsController;
 
 namespace Player.Controls
 {
-    public class CameraControlState : PlayerInputState
+    public class PlayerIdleState : PlayerInputState
     {
         public override void CheckInput()
         {
             base.CheckInput();
-        }
-
-    }
-
-    public class MainCharacterState : PlayerInputState
-    {
-        public override void CheckInput()
-        {
-            base.CheckInput();
-
-
-            if (Input.GetKey(KeyCode.A))
-            {
-                _playerInput.HandlePlayerMove(EntityDirection.Left);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                _playerInput.HandlePlayerMove(EntityDirection.Right);
-            }
-            else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
-            {
-                if (Input.GetKeyUp(KeyCode.A))
-                {
-                    _playerInput.HandlePlayerMove(EntityDirection.Left);
-                }
-                else if (Input.GetKeyUp(KeyCode.D))
-                {
-                    _playerInput.HandlePlayerMove(EntityDirection.Right);
-                }
-            }
-
 
             if (Input.GetMouseButtonDown(0))
             {
-                _playerInput.HandlePlayerClickedOnMouse();
+                _playerActions.OnClickInIdle();
+            }
+        }
+    }
+
+    public class TryingToSpawnCharacter : PlayerInputState
+    {
+        public override void CheckInput()
+        {
+            base.CheckInput();
+
+            float swipeLength = (Input.mousePosition - _playerActions.StartingMousePos).magnitude;
+            if (swipeLength > _playerActions.MinDistanceToSpawnTroop)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    _playerActions.EnterCanSpawnTroopState();
+                }
+            }
+            else
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    _playerActions.EnterIdleStateWhileTryingToSpawnTroop();
+                }
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                _playerActions.OnSwipeWithSpawnCharacter();
             }
         }
     }
 
 
+    public class CanSpawnTroopState : PlayerInputState
+    {
+        public override void CheckInput()
+        {
+            base.CheckInput();
+
+            float swipeLength = (Input.mousePosition - _playerActions.StartingMousePos).magnitude;
+            if (swipeLength < _playerActions.MinDistanceToSpawnTroop)
+            {
+                _playerActions.EnterTryingToSpawnTroopState();
+                return;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                _playerActions.InvokeSpawnTroop();
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                _playerActions.OnSwipeWithSpawnCharacter();
+            }
+        }
+    }
+
     public abstract class PlayerInputState
     {
-        protected PlayerInput _playerInput;
+        protected PlayerInputActions _playerActions;
 
-        public void Init(PlayerInput playerInput)
+        public void Init(PlayerInputActions playerInput)
         {
-            _playerInput = playerInput;
+            _playerActions = playerInput;
         }
 
         public virtual void CheckInput()
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                _playerInput.ClickedOnSwitchPlayerControl(PlayerControl.Camera);
-            }
+
         }
     }
 }

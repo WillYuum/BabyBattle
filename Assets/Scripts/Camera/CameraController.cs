@@ -19,19 +19,12 @@ namespace CameraControllerCore
 
         void Awake()
         {
-            GameloopManager.instance.OnSwitchPlayerControl += SwitchCameraFOVToPlayerControl;
-            _cameraFit = gameObject.GetComponent<CameraFit>();
 
-
-            _controlCameraState.Init(this);
-            _followMainCharacterCameraState.Init(this);
-            _currentCameraState = _followMainCharacterCameraState;
         }
 
 
         void Update()
         {
-            _currentCameraState.Execute();
         }
 
 

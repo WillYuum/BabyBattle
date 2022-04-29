@@ -12,6 +12,7 @@ namespace Player.InputsController
     public class PlayerInputActions : MonoBehaviour
     {
         private PlayerIdleState _playerIdleState = new PlayerIdleState();
+        private MainCharacterIdleState _mainCharacterIdleState = new MainCharacterIdleState();
 
         private PlayerInputState _currentPlayerInput;
 
@@ -23,9 +24,10 @@ namespace Player.InputsController
         void Awake()
         {
             _playerIdleState.Init(this);
+            _mainCharacterIdleState.Init(this);
 
 
-            _currentPlayerInput = _playerIdleState;
+            _currentPlayerInput = _mainCharacterIdleState;
             // GameloopManager.instance.OnSwitchPlayerControl += OnPlayerControlSwitch;
         }
 

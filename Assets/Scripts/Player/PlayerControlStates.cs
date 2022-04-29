@@ -16,6 +16,24 @@ namespace Player.Controls
         }
     }
 
+    public class MainCharacterIdleState : PlayerInputState
+    {
+        public override void CheckInput()
+        {
+            base.CheckInput();
+
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                _playerActions.HandlePlayerMove(EntityDirection.Left);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                _playerActions.HandlePlayerMove(EntityDirection.Right);
+            }
+        }
+    }
+
 
 
     public abstract class PlayerInputState

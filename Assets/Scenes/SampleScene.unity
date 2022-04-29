@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &240337373 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 240337373, guid: 926e77918da4c644fb329a4f18048518, type: 3}
+  m_PrefabInstance: {fileID: 7350924254940931748}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &379911897
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,7 +211,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -877,6 +888,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1003074154
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1003074156}
+  - component: {fileID: 1003074155}
+  m_Layer: 0
+  m_Name: GameVariables
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1003074155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003074154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae131f48554ad1f4ca87ee0c82bb76c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SharpShooterCost: 0
+  BabyTankCost: 0
+--- !u!4 &1003074156
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003074154}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.061084, y: -0.84974366, z: -5.2911057}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1091256183
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,7 +980,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1132476751
 Transform:
   m_ObjectHideFlags: 0
@@ -933,7 +989,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1132476750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.35, y: -3.78, z: 0}
+  m_LocalPosition: {x: 4.23, y: -3.78, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 632322751}
@@ -953,6 +1009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876794eff4b44b048aec4e3460324a7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _friendOrFoe: 1
   _healthBarUI: {fileID: 963932748}
 --- !u!61 &1132476753
 BoxCollider2D:
@@ -1302,7 +1359,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1262412563202172544, guid: 6584c1106efdd0f429416846da082b44, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 12.63
       objectReference: {fileID: 0}
     - target: {fileID: 1262412563202172544, guid: 6584c1106efdd0f429416846da082b44, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1342,11 +1399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1262412563202172545, guid: 6584c1106efdd0f429416846da082b44, type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 1262412563202172545, guid: 6584c1106efdd0f429416846da082b44, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      value: MainCharacter
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6584c1106efdd0f429416846da082b44, type: 3}
@@ -1514,5 +1567,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 7438694783021854661, guid: 926e77918da4c644fb329a4f18048518, type: 3}
+      propertyPath: toysCountText
+      value: 
+      objectReference: {fileID: 240337373}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 926e77918da4c644fb329a4f18048518, type: 3}

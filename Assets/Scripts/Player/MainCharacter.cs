@@ -100,6 +100,14 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, IDamageable/
     //     }
     // }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Collectable"))
+        {
+            GameloopManager.instance.CollectToys(new CollectToysEvent { ToysCount = 1, CollectedToy = other.gameObject });
+        }
+    }
+
     public void Die()
     {
         GameloopManager.instance.MainCharacterDied();

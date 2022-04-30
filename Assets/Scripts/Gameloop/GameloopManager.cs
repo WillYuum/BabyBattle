@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Utils.GenericSingletons;
 using System;
 using UnityEngine.SceneManagement;
-using HUDCore;
 using Troops;
 using SpawnManagerCore;
 using UnityEngine;
+using HUDCore;
 
 public enum PlayerControl { None, MainCharacter, Camera };
 public enum EntityDirection { Idle, Left, Right };
@@ -20,6 +17,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public PlayerControl PlayerControl { get; private set; }
 
 
+    public int HoldingToysCount { get; private set; }
+    public int MaxHoldingToysCount { get; private set; }
 
 
     public event Action OnMainCharacterDied;
@@ -37,6 +36,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         PlayerControl = PlayerControl.MainCharacter;
         OnSwitchPlayerControl.Invoke(PlayerControl);
 
+        //NOTE: This is a temporary so you can start with something when game starts 
+        HoldingToysCount = 5;
+        MaxHoldingToysCount = 15;
+
+        HUD.instance.OnUpdateToysCount.Invoke();
 
         OnGameLoopStarted?.Invoke();
     }
@@ -76,16 +80,36 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public void InvokeSpawnFriendlyTroop(SpawnTroopAction spawnTroopAction)
     {
-        if (spawnTroopAction.TroopCost + ToysUsedCount > ToysMaxUseCount)
+        if (spawnTroopAction.TroopCost > HoldingToysCount)
         {
-            //TODO: Show message that you can't spawn troop
             return;
         }
+
+
+
+        HoldingToysCount -= spawnTroopAction.TroopCost;
 
         var troop = SpawnManager.instance.SpawnFriendlyTroop(spawnTroopAction.TroopType, spawnTroopAction.SpawnPoint);
         troop.InitTroop(spawnTroopAction.MoveDirection);
 
-        //Should update UI for toys
+
+        HUD.instance.OnUpdateToysCount.Invoke();
+    }
+
+
+    public void CollectToys(CollectToysEvent collectToysEvent)
+    {
+        if (HoldingToysCount + collectToysEvent.ToysCount > MaxHoldingToysCount)
+        {
+            //Display can't collect toys message
+        }
+        else
+        {
+            Destroy(collectToysEvent.CollectedToy);
+
+            HoldingToysCount += collectToysEvent.ToysCount;
+            HUD.instance.OnUpdateToysCount.Invoke();
+        }
     }
 
 
@@ -99,6 +123,12 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 interface IDamageable
 {
     void TakeDamage(TakeDamageAction damage);
+}
+
+public struct CollectToysEvent
+{
+    public int ToysCount;
+    public GameObject CollectedToy;
 }
 
 

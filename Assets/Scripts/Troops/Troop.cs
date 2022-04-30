@@ -1,35 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-
 namespace Troops
 {
+
     public enum TroopType { BabyTroop, LargeBaby, MortarBaby };
     public enum TroopState { Idle, Moving, Attacking, Dead };
+
 
     public interface TroopActions
     {
         void Move();
-        void TakeDamage(TroopTakeDamageAction action);
+        void TakeDamage(TakeDamageAction action);
         void Attack();
         void Die();
     }
 
-    public struct TroopTakeDamageAction
-    {
-        public float DamageAmount;
-        public TroopType DamagedByTroop;
-        public TroopTakeDamageAction(int damageAmount, TroopType damagedByTroop)
-        {
-            DamageAmount = damageAmount;
-            DamagedByTroop = damagedByTroop;
-        }
-    }
 
 
-    public class Troop : MonoBehaviour, TroopActions
+    public class Troop : MonoBehaviour, TroopActions, IDamageable
     {
         protected TroopType _troopType;
         protected float _currentHealth { get; private set; }
@@ -46,7 +35,7 @@ namespace Troops
 
         public virtual void Attack()
         {
-            var damageAction = new TroopTakeDamageAction
+            var damageAction = new TakeDamageAction
             {
                 DamageAmount = _attackDamage,
                 DamagedByTroop = _troopType,
@@ -63,12 +52,26 @@ namespace Troops
             Move();
         }
 
+        public void CheckForEnemies()
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, _moveDirection, 1.0f);
+            if (hit.collider)
+            {
+                if (hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
+                {
+                    // damageable.TakeDamage(new TakeDamageAction(10, _troopType));
+                }
+            }
+
+
+        }
+
         public virtual void Move()
         {
             transform.position += (Vector3)_moveDirection * _moveSpeed * Time.deltaTime;
         }
 
-        public virtual void TakeDamage(TroopTakeDamageAction damageAction)
+        public virtual void TakeDamage(TakeDamageAction damageAction)
         {
             _currentHealth -= damageAction.DamageAmount;
             if (_currentHealth <= 0)

@@ -8,7 +8,7 @@ namespace Troops
     public enum TroopState { Idle, Moving, Attacking, Dead };
 
 
-    public interface TroopActions
+    public interface ITroopActions
     {
         void Move();
         void TakeDamage(TakeDamageAction action);
@@ -18,7 +18,7 @@ namespace Troops
 
 
 
-    public class Troop : MonoBehaviour, TroopActions, IDamageable
+    public class Troop : MonoBehaviour, ITroopActions, IDamageable
     {
         protected TroopType _troopType;
         protected float _currentHealth { get; private set; }

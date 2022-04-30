@@ -51,4 +51,24 @@ namespace Utils.GenericSingletons
             }
         }
     }
+
+    public class GenericStaticClass<T>
+    {
+        private static T _instance;
+        public static T instance { get { return _instance; } }
+
+        public static void SetInstance(T instance)
+        {
+            if (_instance == null)
+            {
+                _instance = instance;
+            }
+            else
+            {
+#if UNITY_EDITOR
+                Debug.LogError("Instance already set");
+#endif
+            }
+        }
+    }
 }

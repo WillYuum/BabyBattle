@@ -5,6 +5,7 @@ using Troops;
 using SpawnManagerCore;
 using UnityEngine;
 using HUDCore;
+using Buildings;
 
 public enum PlayerControl { None, MainCharacter, Camera };
 public enum EntityDirection { Idle, Left, Right };
@@ -123,6 +124,13 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 interface IDamageable
 {
     void TakeDamage(TakeDamageAction damage);
+}
+
+public class ConstructBuildingAction
+{
+    public BuildingType BuildingType;
+    public Vector3 SpawnPoint;
+    public FriendOrFoe FriendOrFoe;
 }
 
 public struct CollectToysEvent

@@ -1,54 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
+using GameplayUtils.Methods;
 using UnityEngine;
-using Troops;
-using GameplayUI.Helpers;
 
 
 namespace Buildings
 {
-    public enum FriendOrFoe { Friend, Foe };
+    public enum FriendOrFoe { None, Friend, Foe };
     public enum BuildingType { Destroyed, TroopCamp, DefensiveWall };
 
-    public class BuildingCore : MonoBehaviour, IDamageable
+    public class BuildingCore : MonoBehaviour
     {
         [SerializeField] protected FriendOrFoe _friendOrFoe;
         [SerializeField] protected BuildingType _buildingType;
-        [SerializeField] private float _startingHealth = 100f;
-        protected float _currentHealth;
 
+        [SerializeField] protected BuildingUI _buildingUI;
 
-        [SerializeField] private HealthBarUI _healthBarUI;
 
         // private List<Troop> _troops = new List<Troop>();
 
 
         void Awake()
         {
-            _currentHealth = _startingHealth;
-            _healthBarUI.Init();
+            OnAwake();
+
         }
 
-        public void TakeDamage(TakeDamageAction damageAction)
-        {
-            _currentHealth -= damageAction.DamageAmount;
-            _healthBarUI.SetHealth(_currentHealth / _startingHealth, 0.1f);
-
-            if (_currentHealth <= 0)
-            {
-                // MakeTroopsLeaveBuilding(damageAction);
-                DestroyBuilding();
-            }
-        }
-
-        public virtual void InteractWithBuilding()
+        protected virtual void OnAwake()
         {
 
         }
+
+
+        public void Init(ConstructBuildingAction constructBuildingAction)
+        {
+            _friendOrFoe = constructBuildingAction.FriendOrFoe;
+
+        }
+
 
         public virtual void DestroyBuilding()
         {
             Destroy(gameObject, 2.0f);
+        }
+
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (UtilMethods.CollidedWithPlayer(other))
+            {
+                _buildingUI.ToggleBuildingUI(true);
+            }
+        }
+
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (UtilMethods.CollidedWithPlayer(other))
+            {
+                _buildingUI.ToggleBuildingUI(false);
+            }
         }
     }
 }

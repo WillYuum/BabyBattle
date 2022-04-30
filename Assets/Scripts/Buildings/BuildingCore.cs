@@ -9,7 +9,7 @@ namespace Buildings
 
     public class BuildingCore : MonoBehaviour
     {
-        [SerializeField] protected FriendOrFoe _friendOrFoe;
+        protected FriendOrFoe _friendOrFoe;
         [SerializeField] protected BuildingType _buildingType;
 
         [SerializeField] protected BuildingUI _buildingUI;

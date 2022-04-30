@@ -29,5 +29,11 @@ namespace Buildings.TroopCampComponent
             _leftButton.onClick.AddListener(() => initConfig.OnClickOnArrowButton(EntityDirection.Left));
             _rightButton.onClick.AddListener(() => initConfig.OnClickOnArrowButton(EntityDirection.Right));
         }
+
+
+        public void UpdateHealthBar(float healthRatio)
+        {
+            _healthBarUI.SetHealth(healthRatio, 0.1f);
+        }
     }
 }

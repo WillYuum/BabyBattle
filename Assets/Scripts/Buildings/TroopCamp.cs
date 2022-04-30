@@ -3,13 +3,16 @@ using UnityEngine;
 
 namespace Buildings.TroopCampComponent
 {
-    public class TroopCamp : BuildingCore, IDamageable
+    public class TroopCamp : BuildingCore, IDamageable, ITroopAccessBuilding
     {
 
         [SerializeField] private float _startingHealth = 100f;
         protected float _currentHealth;
-        [SerializeField] private HealthBarUI _healthBarUI;
+        // [SerializeField] private HealthBarUI _healthBarUI;
         [SerializeField] private TroopCampUI _troopCampUI;
+
+        [SerializeField] private int _troopCapacity = 3;
+        private int _currentTroopCount;
 
 
         protected override void OnAwake()
@@ -28,7 +31,7 @@ namespace Buildings.TroopCampComponent
         public void TakeDamage(TakeDamageAction damageAction)
         {
             _currentHealth -= damageAction.DamageAmount;
-            _healthBarUI.SetHealth(_currentHealth / _startingHealth, 0.1f);
+            _troopCampUI.UpdateHealthBar(_currentHealth / _startingHealth);
 
             if (_currentHealth <= 0)
             {
@@ -42,7 +45,7 @@ namespace Buildings.TroopCampComponent
         private void OnClickRepair()
         {
             _currentHealth = _startingHealth;
-            _healthBarUI.SetHealth(_currentHealth / _startingHealth, 0.1f);
+            _troopCampUI.UpdateHealthBar(_currentHealth / _startingHealth);
         }
 
 
@@ -51,5 +54,19 @@ namespace Buildings.TroopCampComponent
             //Make Troops Leave Building depending on the requested directioon
         }
 
+        public void TryAccessBuilding()
+        {
+            if (_currentTroopCount < _troopCapacity)
+            {
+                _currentTroopCount++;
+            }
+        }
+
+    }
+
+
+    public interface ITroopAccessBuilding
+    {
+        void TryAccessBuilding();
     }
 }

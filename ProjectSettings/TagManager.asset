@@ -7,11 +7,12 @@ TagManager:
   - Enemy
   - Card
   - Clickable
+  - Troop
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Enemy

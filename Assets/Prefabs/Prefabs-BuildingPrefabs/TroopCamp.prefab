@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1090526739166556519
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1234282322577439521}
+  m_Layer: 0
+  m_Name: Pnt-3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1234282322577439521
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090526739166556519}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4708517444510707580}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1379500456037012915
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,6 +560,100 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &3506580549501565416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5045026124905762063}
+  m_Layer: 0
+  m_Name: Pnt-2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5045026124905762063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3506580549501565416}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4708517444510707580}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3528654435057913576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4708517444510707580}
+  m_Layer: 0
+  m_Name: TroopStandPnts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4708517444510707580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3528654435057913576}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4675897081978442649}
+  - {fileID: 5045026124905762063}
+  - {fileID: 1234282322577439521}
+  - {fileID: 5251027772653017047}
+  m_Father: {fileID: 1288159799944038120}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4073379503377828329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4675897081978442649}
+  m_Layer: 0
+  m_Name: Pnt-1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4675897081978442649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4073379503377828329}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4708517444510707580}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4281362252137521719
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,6 +971,36 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &6173063331680993807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5251027772653017047}
+  m_Layer: 0
+  m_Name: Pnt-3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5251027772653017047
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6173063331680993807}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4708517444510707580}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6229394569954845598
 GameObject:
   m_ObjectHideFlags: 0
@@ -1124,14 +1278,19 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4005636510331483022, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
   m_PrefabInstance: {fileID: 2771569394125168112}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1288159799944038121 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4005636509208582937, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+  m_PrefabInstance: {fileID: 2771569394125168112}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8935440717719758711 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6518846456417467015, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
   m_PrefabInstance: {fileID: 2771569394125168112}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1288159799944038121 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4005636509208582937, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+--- !u!4 &1288159799944038120 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4005636509208582936, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
   m_PrefabInstance: {fileID: 2771569394125168112}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &5666834647574422572
@@ -1151,6 +1310,12 @@ MonoBehaviour:
   _startingHealth: 100
   _troopCampUI: {fileID: 4383416754467154623}
   _troopCapacity: 3
+  _idlePositions:
+    _array:
+    - {fileID: 4675897081978442649}
+    - {fileID: 5045026124905762063}
+    - {fileID: 1234282322577439521}
+    - {fileID: 5251027772653017047}
 --- !u!114 &4383416754467154623
 MonoBehaviour:
   m_ObjectHideFlags: 0

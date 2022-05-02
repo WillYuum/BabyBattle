@@ -17,7 +17,7 @@ namespace Buildings.TroopCampComponent
         private int _currentTroopCount;
 
 
-        private List<ITroopBuildingInteraction> _troops;
+        private List<ITroopBuildingInteraction> _troops = new List<ITroopBuildingInteraction>();
 
         [SerializeField] private PseudoRandArray<Transform> _idlePositions;
 

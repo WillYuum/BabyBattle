@@ -31,6 +31,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BabySharpShooter
       objectReference: {fileID: 0}
+    - target: {fileID: 5423619208707616205, guid: c2f8fb789e4e0354693c32f95604a5ef, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5423619208707616207, guid: c2f8fb789e4e0354693c32f95604a5ef, type: 3}
       propertyPath: m_RootOrder
       value: 0

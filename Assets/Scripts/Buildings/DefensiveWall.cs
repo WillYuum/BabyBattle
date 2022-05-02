@@ -16,6 +16,21 @@ namespace Buildings.DefensiveWallComponent
 
         private List<ITroopBuildingInteraction> _troops = new List<ITroopBuildingInteraction>();
 
+
+        protected override void OnAwake()
+        {
+            _currentHealth = _startingHealth;
+
+            _defensiveWallUI.Init(new DefensiveWallUI.InitConfig()
+            {
+                StartingHealthRatio = _currentHealth / _startingHealth,
+                OnClickRepairButton = OnClickRepair,
+                OnClickOnAttackButton = OnClickAttack,
+            });
+        }
+
+
+
         public void TakeDamage(TakeDamageAction damageAction)
         {
             _currentHealth -= damageAction.DamageAmount;
@@ -27,6 +42,25 @@ namespace Buildings.DefensiveWallComponent
                 DestroyBuilding();
             }
         }
+
+        private void OnClickRepair()
+        {
+            _currentHealth = _startingHealth;
+            _defensiveWallUI.UpdateHealthBar(_currentHealth / _startingHealth);
+        }
+
+
+        private void OnClickAttack(EntityDirection direction)
+        {
+            //Make Troops Leave Building depending on the requested direction
+            foreach (var troop in _troops)
+            {
+                troop.MoveOutOfBuilding(direction);
+            }
+
+            _troops.Clear();
+        }
+
 
 
         protected override void OnTroopInteractWithBuilding(ITroopBuildingInteraction troop)

@@ -59,8 +59,8 @@ namespace Buildings.TroopCampComponent
             foreach (var troop in _troops)
             {
                 troop.MoveOutOfBuilding(direction);
-                _troops.Remove(troop);
             }
+            _troops.Clear();
         }
 
 

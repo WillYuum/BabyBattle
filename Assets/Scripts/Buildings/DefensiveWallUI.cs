@@ -30,7 +30,7 @@ namespace Buildings.DefensiveWallComponent
 
             //NOTE: Implemented this in fast way possible, I get direction depending on  the position of button relative of the center of the UI
             //NOTE: So if button is on the left of the center, it will return EntityDirection.Left
-            EntityDirection direction = transform.position.x - _moveForwardButton.transform.position.x > 0 ? EntityDirection.Right : EntityDirection.Left;
+            EntityDirection direction = _moveForwardButton.transform.position.x - transform.position.x > 0 ? EntityDirection.Right : EntityDirection.Left;
             _moveForwardButton.onClick.AddListener(() => initConfig.OnClickOnAttackButton(direction));
         }
 

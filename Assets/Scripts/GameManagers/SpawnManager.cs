@@ -73,7 +73,7 @@ namespace SpawnManagerCore
             {
                 yield return new WaitForSeconds(spawnDelay);
                 _bigBabyPrefabConfig.CreateGameObject(
-                    _enemyTroopSpawnPoints.Next().position,
+                    _enemyTroopSpawnPoints.PickNext().position,
                     Quaternion.identity,
                     transform
                 );

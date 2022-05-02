@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using GameplayUI.Helpers;
+using Troops;
 using UnityEngine;
+using Utils.ArrayUtils;
 
 namespace Buildings.TroopCampComponent
 {
@@ -8,11 +11,16 @@ namespace Buildings.TroopCampComponent
 
         [SerializeField] private float _startingHealth = 100f;
         protected float _currentHealth;
-        // [SerializeField] private HealthBarUI _healthBarUI;
         [SerializeField] private TroopCampUI _troopCampUI;
 
         [SerializeField] private int _troopCapacity = 3;
         private int _currentTroopCount;
+
+
+        private List<ITroopBuildingInteraction> _troops;
+
+        [SerializeField] private PseudoRandArray<Transform> _idlePositions;
+
 
 
         protected override void OnAwake()
@@ -51,8 +59,35 @@ namespace Buildings.TroopCampComponent
 
         private void OnClickAttack(EntityDirection direction)
         {
-            //Make Troops Leave Building depending on the requested directioon
+            //Make Troops Leave Building depending on the requested direction
+            foreach (var troop in _troops)
+            {
+                troop.MoveOutOfBuilding(direction);
+                _troops.Remove(troop);
+            }
         }
+
+
+
+        protected override void OnTroopInteractWithBuilding(ITroopBuildingInteraction troop)
+        {
+            base.OnTroopInteractWithBuilding(troop);
+
+            if (troop.TryAccessBuilding(this))
+            {
+                _troops.Add(troop);
+                InvokeTroopIdleInBuilding(troop);
+            }
+        }
+
+        private void InvokeTroopIdleInBuilding(ITroopBuildingInteraction troop)
+        {
+
+            troop.MoveToIdlePosition(_idlePositions.PickNext());
+        }
+
+
+
 
         public void TryAccessBuilding()
         {

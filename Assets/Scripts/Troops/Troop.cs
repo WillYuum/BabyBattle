@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Buildings;
+using DG.Tweening;
 using UnityEngine;
 namespace Troops
 {
@@ -16,9 +18,16 @@ namespace Troops
         void Die();
     }
 
+    public interface ITroopBuildingInteraction
+    {
+        bool TryAccessBuilding(BuildingCore buildingCore);
+        void MoveToIdlePosition(Transform target);
+        void MoveOutOfBuilding(EntityDirection direction);
+    }
 
 
-    public class Troop : MonoBehaviour, ITroopActions, IDamageable
+
+    public class Troop : MonoBehaviour, ITroopActions, IDamageable, ITroopBuildingInteraction
     {
         protected TroopType _troopType;
         protected float _currentHealth { get; private set; }
@@ -52,7 +61,7 @@ namespace Troops
             Move();
         }
 
-        public void CheckForEnemies()
+        public void CheckForEenmies()
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, _moveDirection, 1.0f);
             if (hit.collider)
@@ -62,13 +71,11 @@ namespace Troops
                     // damageable.TakeDamage(new TakeDamageAction(10, _troopType));
                 }
             }
-
-
         }
 
         public virtual void Move()
         {
-            transform.position += (Vector3)_moveDirection * _moveSpeed * Time.deltaTime;
+            // transform.position += (Vector3)_moveDirection * _moveSpeed * Time.deltaTime;
         }
 
         public virtual void TakeDamage(TakeDamageAction damageAction)
@@ -84,6 +91,22 @@ namespace Troops
         public virtual void Die()
         {
             Destroy(gameObject, 1.0f);
+        }
+
+        public bool TryAccessBuilding(BuildingCore buildingCore)
+        {
+            return true;
+        }
+
+        public void MoveToIdlePosition(Transform target)
+        {
+            float duration = (target.position.x - transform.position.x) / _moveSpeed;
+            transform.DOMoveX(target.position.x, duration);
+        }
+
+        public void MoveOutOfBuilding(EntityDirection direction)
+        {
+            _moveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
         }
     }
 }

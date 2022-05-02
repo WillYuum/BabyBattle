@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using GameplayUtils.Methods;
+using Troops;
 using UnityEngine;
+using Utils.ArrayUtils;
 
 
 namespace Buildings
@@ -13,10 +16,6 @@ namespace Buildings
         [SerializeField] protected BuildingType _buildingType;
 
         [SerializeField] protected BuildingUI _buildingUI;
-
-
-        // private List<Troop> _troops = new List<Troop>();
-
 
         void Awake()
         {
@@ -49,6 +48,16 @@ namespace Buildings
             {
                 _buildingUI.ToggleBuildingUI(true);
             }
+
+            if (UtilMethods.ColliderWithTroop(other))
+            {
+                OnTroopInteractWithBuilding(other.GetComponent<ITroopBuildingInteraction>());
+            }
+        }
+
+        protected virtual void OnTroopInteractWithBuilding(ITroopBuildingInteraction troop)
+        {
+
         }
 
 

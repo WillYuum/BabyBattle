@@ -10,5 +10,10 @@ namespace GameplayUtils.Methods
         {
             return other.CompareTag("Player");
         }
+
+        public static bool ColliderWithTroop(Collider2D other)
+        {
+            return other.CompareTag("Troop");
+        }
     }
 }

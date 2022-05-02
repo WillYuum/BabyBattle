@@ -17,7 +17,7 @@ namespace Utils.ArrayUtils
             _index = 0;
         }
 
-        public T Next()
+        public T PickNext()
         {
             if (_index >= _array.Length)
             {

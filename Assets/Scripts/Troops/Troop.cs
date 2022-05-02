@@ -5,29 +5,30 @@ using DG.Tweening;
 using UnityEngine;
 namespace Troops
 {
+    using States;
 
     public enum TroopType { BabyTroop, LargeBaby, MortarBaby };
-    public enum TroopState { Idle, Moving, Attacking, Dead };
+    public enum TroopState { Idle, Moving, Attacking };
 
 
-    public interface ITroopActions
-    {
-        void Move();
-        void TakeDamage(TakeDamageAction action);
-        void Attack();
-        void Die();
-    }
+    // public interface ITroopStateActions
+    // {
+    //     void Move();
+    //     // void TakeDamage(TakeDamageAction action);
+    //     void Attack();
+    //     void Die();
+    // }
 
     public interface ITroopBuildingInteraction
     {
         bool TryAccessBuilding(BuildingCore buildingCore);
-        void MoveToIdlePosition(Transform target);
+        void MoveToIdlePositionInBuilding(Transform target);
         void MoveOutOfBuilding(EntityDirection direction);
     }
 
 
 
-    public class Troop : MonoBehaviour, ITroopActions, IDamageable, ITroopBuildingInteraction
+    public class Troop : MonoBehaviour, IDamageable, ITroopBuildingInteraction
     {
         protected TroopType _troopType;
         protected float _currentHealth { get; private set; }
@@ -36,10 +37,18 @@ namespace Troops
         protected float _attackDamage { get; private set; }
         protected Vector2 _moveDirection { get; private set; }
 
+        private TroopStateCore _currentTroopState;
+
+
         public void InitTroop(EntityDirection moveDir)
         {
+
             _moveSpeed = 5.0f;
             _moveDirection = moveDir == EntityDirection.Left ? Vector2.left : Vector2.right;
+
+            _currentTroopState = new TroopMoveState();
+            _currentTroopState.ChangeState(_currentTroopState, this);
+
         }
 
         public virtual void Attack()
@@ -58,7 +67,7 @@ namespace Troops
 
         void Update()
         {
-            Move();
+            _currentTroopState.Execute();
         }
 
         public void CheckForEenmies()
@@ -73,9 +82,9 @@ namespace Troops
             }
         }
 
-        public virtual void Move()
+        public void Move()
         {
-            // transform.position += (Vector3)_moveDirection * _moveSpeed * Time.deltaTime;
+            transform.position += (Vector3)_moveDirection * _moveSpeed * Time.deltaTime;
         }
 
         public virtual void TakeDamage(TakeDamageAction damageAction)
@@ -98,15 +107,44 @@ namespace Troops
             return true;
         }
 
-        public void MoveToIdlePosition(Transform target)
+        public void MoveToIdlePositionInBuilding(Transform target)
         {
             float duration = (target.position.x - transform.position.x) / _moveSpeed;
-            transform.DOMoveX(target.position.x, duration);
+            transform.DOMoveX(target.position.x, duration).OnComplete(() =>
+            {
+                ChangeState(TroopState.Idle);
+            });
         }
 
         public void MoveOutOfBuilding(EntityDirection direction)
         {
             _moveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
+
+            ChangeState(TroopState.Moving);
+        }
+
+
+
+        private void ChangeState(TroopState newState)
+        {
+            switch (newState)
+            {
+                case TroopState.Idle:
+                    _currentTroopState = new TroopIdleState();
+                    break;
+                case TroopState.Moving:
+                    _currentTroopState = new TroopMoveState();
+                    break;
+                // case TroopState.Attacking:
+                //     _currentTroopState = new TroopAttackState();
+                //     break;
+                default:
+                    _currentTroopState = new TroopIdleState();
+                    Debug.Log("Invalid Troop State");
+                    break;
+            }
+
+            _currentTroopState.ChangeState(_currentTroopState, this);
         }
     }
 }

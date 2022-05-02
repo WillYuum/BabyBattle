@@ -49,7 +49,7 @@ namespace Buildings
                 _buildingUI.ToggleBuildingUI(true);
             }
 
-            if (UtilMethods.ColliderWithTroop(other))
+            if (UtilMethods.CollidedWithTroop(other))
             {
                 OnTroopInteractWithBuilding(other.GetComponent<ITroopBuildingInteraction>());
             }

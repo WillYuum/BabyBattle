@@ -83,7 +83,7 @@ namespace Buildings.TroopCampComponent
         private void InvokeTroopIdleInBuilding(ITroopBuildingInteraction troop)
         {
 
-            troop.MoveToIdlePosition(_idlePositions.PickNext());
+            troop.MoveToIdlePositionInBuilding(_idlePositions.PickNext());
         }
 
 

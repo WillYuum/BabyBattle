@@ -6,16 +6,12 @@ using Utils.ArrayUtils;
 
 namespace Buildings.TroopCampComponent
 {
-    public class TroopCamp : BuildingCore, IDamageable, ITroopAccessBuilding
+    public class TroopCamp : BuildingCore, IDamageable
     {
 
         [SerializeField] private float _startingHealth = 100f;
         protected float _currentHealth;
         [SerializeField] private TroopCampUI _troopCampUI;
-
-        [SerializeField] private int _troopCapacity = 3;
-        private int _currentTroopCount;
-
 
         private List<ITroopBuildingInteraction> _troops = new List<ITroopBuildingInteraction>();
 
@@ -73,7 +69,7 @@ namespace Buildings.TroopCampComponent
         {
             base.OnTroopInteractWithBuilding(troop);
 
-            if (troop.TryAccessBuilding(this))
+            if (troop.TryAccessBuilding(this) && _troops.Count < _idlePositions.Length)
             {
                 _troops.Add(troop);
                 InvokeTroopIdleInBuilding(troop);
@@ -86,22 +82,5 @@ namespace Buildings.TroopCampComponent
             troop.MoveToIdlePositionInBuilding(_idlePositions.PickNext());
         }
 
-
-
-
-        public void TryAccessBuilding()
-        {
-            if (_currentTroopCount < _troopCapacity)
-            {
-                _currentTroopCount++;
-            }
-        }
-
-    }
-
-
-    public interface ITroopAccessBuilding
-    {
-        void TryAccessBuilding();
     }
 }

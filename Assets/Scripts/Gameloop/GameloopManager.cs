@@ -32,6 +32,17 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         StartGameLoop();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            CollectToys(new CollectToysEvent
+            {
+                ToysCount = 1
+            });
+        }
+    }
+
     public void StartGameLoop()
     {
         PlayerControl = PlayerControl.MainCharacter;
@@ -106,7 +117,10 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
         else
         {
-            Destroy(collectToysEvent.CollectedToy);
+            if (collectToysEvent.CollectedToy)
+            {
+                Destroy(collectToysEvent.CollectedToy);
+            }
 
             HoldingToysCount += collectToysEvent.ToysCount;
             HUD.instance.OnUpdateToysCount.Invoke();

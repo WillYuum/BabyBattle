@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 625373009}
   - component: {fileID: 625373008}
   m_Layer: 0
-  m_Name: TroopCamp-Card
+  m_Name: DefensiveWall-Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,7 +553,7 @@ GameObject:
   - component: {fileID: 1066949307}
   - component: {fileID: 1066949306}
   m_Layer: 0
-  m_Name: DefensiveWall-Card
+  m_Name: TroopCamp-Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -833,6 +833,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1284187226678487745, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+      propertyPath: _objectToToggle.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1284187226678487745, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+      propertyPath: _objectToToggle.Array.data[0]
+      value: 
+      objectReference: {fileID: 625373006}
+    - target: {fileID: 1284187226678487745, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+      propertyPath: _objectToToggle.Array.data[1]
+      value: 
+      objectReference: {fileID: 1066949304}
     - target: {fileID: 4005636509208582918, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
       propertyPath: m_Size.x
       value: 2.4545898
@@ -947,9 +959,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+--- !u!114 &1779787705994471824 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1284187226678487745, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+  m_PrefabInstance: {fileID: 675902815828935505}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537283343683629278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 133fceed743a98042895f56908a117ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4537283343683629279 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4005636510331483022, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+  m_PrefabInstance: {fileID: 675902815828935505}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4537283343683629278 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4005636510331483023, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
   m_PrefabInstance: {fileID: 675902815828935505}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5987204029971184086 stripped
@@ -957,3 +985,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6518846456417467015, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
   m_PrefabInstance: {fileID: 675902815828935505}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4537283342292031560 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4005636509208582937, guid: 7f46e315ab30c3343b9d3371b48ed9e8, type: 3}
+  m_PrefabInstance: {fileID: 675902815828935505}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3964969194922039007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537283342292031560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eea0c4f92946c724a99391383f0a191e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buildingType: 0
+  _buildingUI: {fileID: 1779787705994471824}
+  _buildableUI: {fileID: 2317834521879256469}
+--- !u!114 &2317834521879256469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537283343683629278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1e6fdb7a0a9df4295bb9097b539619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _troopCampButton: {fileID: 1066949306}
+  _defensiveWallButton: {fileID: 625373008}

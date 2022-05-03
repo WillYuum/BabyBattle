@@ -8,7 +8,7 @@ using Utils.ArrayUtils;
 namespace Buildings
 {
     public enum FriendOrFoe { None, Friend, Foe };
-    public enum BuildingType { Destroyed, TroopCamp, DefensiveWall };
+    public enum BuildingType { Buildable, TroopCamp, DefensiveWall };
 
     public class BuildingCore : MonoBehaviour
     {
@@ -31,7 +31,7 @@ namespace Buildings
 
         public void Init(ConstructBuildingAction constructBuildingAction)
         {
-            _friendOrFoe = constructBuildingAction.FriendOrFoe;
+            // _friendOrFoe = constructBuildingAction.FriendOrFoe;
 
         }
 

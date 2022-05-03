@@ -128,6 +128,24 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
+    public void HandleConstructBuilding(ConstructBuildingAction constructBuildingAction, Action onStartBuilding)
+    {
+        if (HoldingToysCount < constructBuildingAction.Cost)
+        {
+            //Display can't construct building message
+        }
+        else
+        {
+            HoldingToysCount -= constructBuildingAction.Cost;
+            HUD.instance.OnUpdateToysCount.Invoke();
+
+            SpawnManager.instance.SpawnBuilding(constructBuildingAction.BuildingType, constructBuildingAction.SpawnPoint);
+
+            onStartBuilding.Invoke();
+        }
+    }
+
+
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -140,11 +158,13 @@ interface IDamageable
     void TakeDamage(TakeDamageAction damage);
 }
 
+
 public class ConstructBuildingAction
 {
     public BuildingType BuildingType;
+    public int Cost;
     public Vector3 SpawnPoint;
-    public FriendOrFoe FriendOrFoe;
+    // public FriendOrFoe FriendOrFoe;
 }
 
 public struct CollectToysEvent

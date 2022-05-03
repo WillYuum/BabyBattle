@@ -5,7 +5,7 @@ using Utils.GenericSingletons;
 using Utils.ArrayUtils;
 using GameplayUtils.Prefabs;
 using Troops;
-
+using Buildings;
 namespace SpawnManagerCore
 {
     [System.Serializable]
@@ -18,6 +18,9 @@ namespace SpawnManagerCore
     {
 
         [SerializeField] private TroopPrefabConfig[] _friendlyTroopsPrefabs;
+
+        [SerializeField] private PrefabConfig _troopCampBuilding;
+        [SerializeField] private PrefabConfig _defensiveWallBuilding;
 
 
         [SerializeField] private PseudoRandArray<Transform> _enemyTroopSpawnPoints;
@@ -77,6 +80,22 @@ namespace SpawnManagerCore
                     Quaternion.identity,
                     transform
                 );
+            }
+        }
+
+
+
+        public GameObject SpawnBuilding(BuildingType buildingType, Vector3 position)
+        {
+            switch (buildingType)
+            {
+                case BuildingType.TroopCamp:
+                    return _troopCampBuilding.CreateGameObject(position, Quaternion.identity);
+                case BuildingType.DefensiveWall:
+                    return _defensiveWallBuilding.CreateGameObject(position, Quaternion.identity);
+                default:
+                    Debug.LogError("No prefab found for building type: " + buildingType);
+                    return _troopCampBuilding.CreateGameObject(position, Quaternion.identity);
             }
         }
     }

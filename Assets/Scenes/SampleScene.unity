@@ -637,6 +637,10 @@ MonoBehaviour:
   - troopType: 1
     prefabConfig:
       prefab: {fileID: 4094519946160955849, guid: 57844fd6dc8e62849b92e69652e84e7b, type: 3}
+  _troopCampBuilding:
+    prefab: {fileID: 1288159799944038121, guid: 485ff870de4f948489310b2df901ffb6, type: 3}
+  _defensiveWallBuilding:
+    prefab: {fileID: 1120096075976647682, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
   _enemyTroopSpawnPoints:
     _array:
     - {fileID: 2070721246}

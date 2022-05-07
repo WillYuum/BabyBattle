@@ -7,46 +7,61 @@ namespace CameraControllerCore
 {
     public class CameraController : MonoBehaviour
     {
-        private CameraFit _cameraFit;
-
-
-        [Header("Camera States")]
-        [SerializeField] private ControlCameraState _controlCameraState = new ControlCameraState();
-        [SerializeField] private MainCharacterCameraState _followMainCharacterCameraState = new MainCharacterCameraState();
+        private CameraFollowPlayerState _followPlayerCameraState = new CameraFollowPlayerState();
         private CameraStateCore _currentCameraState;
 
+
+        [Header("References")]
+        [SerializeField] private Transform _cameraMinPosition;
+        [SerializeField] private Transform _cameraMaxPosition;
 
 
         void Awake()
         {
 
+            Vector2 cameraCurrentPosition = Camera.main.transform.position;
+            float cameraHalfWidthLength = Camera.main.ViewportToWorldPoint(new Vector2(1.0f, 0f)).x;
+            //Need to do the calculation when camera is set in origin position
+            //so removing unwanted extra length
+            cameraHalfWidthLength -= cameraCurrentPosition.x;
+
+            void addOffsetToMinMaxPosition(Transform bounds, float offset)
+            {
+                bounds.position += new Vector3(offset, 0f, 0f);
+            }
+
+            addOffsetToMinMaxPosition(_cameraMinPosition, cameraHalfWidthLength);
+            addOffsetToMinMaxPosition(_cameraMaxPosition, -cameraHalfWidthLength);
+
+
+
+
+            _currentCameraState = _followPlayerCameraState;
+            _followPlayerCameraState.Init(this);
+        }
+
+        private void SetCameraOffSetToBoundsOnCamera(Transform bounds, Vector3 cameraOffset)
+        {
+            Vector3 positions = bounds.position;
+            positions.x += cameraOffset.x;
+            bounds.position = positions;
         }
 
 
         void Update()
         {
+            _currentCameraState.Execute();
         }
 
-
-        private void SwitchCameraFOVToPlayerControl(PlayerControl playerControl)
+        public void CameraFollowPlayer()
         {
-            float tweenDuration = 0.5f;
+            Vector3 newCameraPos = MainCharacter.instance.GetPos;
 
-            if (playerControl == PlayerControl.MainCharacter)
-            {
-                float mainCharacterXPos = MainCharacter.instance.transform.position.x;
+            newCameraPos.x = Mathf.Clamp(newCameraPos.x, _cameraMinPosition.position.x, _cameraMaxPosition.position.x);
+            newCameraPos.y = transform.position.y;
+            newCameraPos.z = transform.position.z;
 
-                _cameraFit.SwitchToCameraFit(GameloopManager.instance.PlayerControl, tweenDuration);
-                transform.DOMoveX(mainCharacterXPos, tweenDuration);
-
-                _currentCameraState = _followMainCharacterCameraState;
-            }
-            else
-            {
-                _cameraFit.SwitchToCameraFit(GameloopManager.instance.PlayerControl, tweenDuration);
-
-                _currentCameraState = _controlCameraState;
-            }
+            transform.position = newCameraPos;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace HUDCore
     public class HUD : MonoBehaviourSingleton<HUD>
     {
         public Action<float> OnUpdatePlayerHealth;
+        public Action OnUpdateTroopsSpawnCount;
         public Action OnUpdateToysCount;
 
     }

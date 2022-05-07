@@ -21,6 +21,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public int HoldingToysCount { get; private set; }
     public int MaxHoldingToysCount { get; private set; }
 
+    public int CurrentSpawnedTroopsCount { get; private set; }
+    public int MaxSpawedTroopsCount { get; private set; }
+
 
     public event Action OnMainCharacterDied;
     public event Action OnGameLoopStarted;
@@ -52,6 +55,10 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         HoldingToysCount = 5;
         MaxHoldingToysCount = 15;
 
+        CurrentSpawnedTroopsCount = 0;
+        MaxSpawedTroopsCount = 10;
+
+        HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
         HUD.instance.OnUpdateToysCount.Invoke();
 
         OnGameLoopStarted?.Invoke();
@@ -92,7 +99,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public void InvokeSpawnFriendlyTroop(SpawnTroopAction spawnTroopAction)
     {
-        if (spawnTroopAction.TroopCost > HoldingToysCount)
+        bool canSpawnTroop = CurrentSpawnedTroopsCount < MaxSpawedTroopsCount;
+        bool sufficientToys = HoldingToysCount > spawnTroopAction.TroopCost;
+        if (!canSpawnTroop || !sufficientToys)
         {
             return;
         }
@@ -100,11 +109,12 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
 
         HoldingToysCount -= spawnTroopAction.TroopCost;
+        CurrentSpawnedTroopsCount++;
 
         var troop = SpawnManager.instance.SpawnFriendlyTroop(spawnTroopAction.TroopType, spawnTroopAction.SpawnPoint);
         troop.InitTroop(spawnTroopAction.MoveDirection);
 
-
+        HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
         HUD.instance.OnUpdateToysCount.Invoke();
     }
 

@@ -10,10 +10,13 @@ namespace HUDCore.Screens
         [SerializeField] private TextMeshProUGUI tabKeyText;
         [SerializeField] private TextMeshProUGUI toysCountText;
 
+        [SerializeField] private TextMeshProUGUI troopsSpawnCountText;
+
         void Awake()
         {
             InitGameScreen();
             HUD.instance.OnUpdateToysCount += UpdateToysCout;
+            HUD.instance.OnUpdateTroopsSpawnCount += UpdateTroopSpawnCount;
         }
 
         public void InitGameScreen()
@@ -49,7 +52,15 @@ namespace HUDCore.Screens
             int maxToys = GameloopManager.instance.MaxHoldingToysCount;
 
             toysCountText.text = $"{usedToys}/{maxToys}";
+        }
 
+
+        public void UpdateTroopSpawnCount()
+        {
+            int spawnedTroops = GameloopManager.instance.CurrentSpawnedTroopsCount;
+            int maxTroops = GameloopManager.instance.MaxSpawedTroopsCount;
+
+            troopsSpawnCountText.text = $"{spawnedTroops}/{maxTroops}";
         }
 
     }

@@ -11,14 +11,6 @@ namespace Troops
     public enum TroopState { Idle, Moving, Attacking };
 
 
-    // public interface ITroopStateActions
-    // {
-    //     void Move();
-    //     // void TakeDamage(TakeDamageAction action);
-    //     void Attack();
-    //     void Die();
-    // }
-
     public interface ITroopBuildingInteraction
     {
         bool TryAccessBuilding(BuildingCore buildingCore);
@@ -40,10 +32,16 @@ namespace Troops
         private TroopStateCore _currentTroopState;
 
 
-        public void InitTroop(EntityDirection moveDir)
+        public void InitTroop(TroopType troopType, EntityDirection moveDir)
         {
+            // _currentHealth = GameVariables.Instance.
+            TroopVariable data = GameVariables.Instance.TroopVariables.GetVariable(troopType);
 
-            _moveSpeed = 5.0f;
+            _currentHealth = data.StartingHealth;
+            _attackDelay = data.AttackDelay;
+            _moveSpeed = data.MoveSpeed;
+            _attackDamage = data.Damage;
+
             _moveDirection = moveDir == EntityDirection.Left ? Vector2.left : Vector2.right;
 
             _currentTroopState = new TroopMoveState();

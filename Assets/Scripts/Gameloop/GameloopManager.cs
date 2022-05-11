@@ -112,7 +112,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         CurrentSpawnedTroopsCount++;
 
         var troop = SpawnManager.instance.SpawnFriendlyTroop(spawnTroopAction.TroopType, spawnTroopAction.SpawnPoint);
-        troop.InitTroop(spawnTroopAction.MoveDirection);
+        troop.InitTroop(spawnTroopAction.TroopType, spawnTroopAction.MoveDirection);
 
         HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
         HUD.instance.OnUpdateToysCount.Invoke();

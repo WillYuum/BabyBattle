@@ -7,7 +7,6 @@ using Utils.ArrayUtils;
 
 namespace Buildings
 {
-    public enum FriendOrFoe { None, Friend, Foe };
     public enum BuildingType { Buildable, TroopCamp, DefensiveWall };
 
     public class BuildingCore : MonoBehaviour

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Troops;
 using Utils.GenericSingletons;
+using Buildings;
+
 public class GameVariables : MonoBehaviourSingletonPersistent<GameVariables>
 {
     [SerializeField] public Variable<TroopType, TroopVariable> TroopVariables;
-
+    [field: SerializeField] public Variable<BuildingType, BuildingVariable> BuildingVariables { get; private set; }
 }
 
 [System.Serializable]
@@ -47,7 +49,16 @@ public struct TroopVariable
 {
     [SerializeField] public float MoveSpeed;
     [SerializeField] public float StartingHealth;
+    [SerializeField] public float Cost;
     [SerializeField] public float AttackDelay;
     [SerializeField] public float Damage;
 }
 
+
+
+[System.Serializable]
+public struct BuildingVariable
+{
+    [SerializeField] public float StartingHealth;
+    [SerializeField] public float Cost;
+}

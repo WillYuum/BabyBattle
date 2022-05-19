@@ -1,20 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Utils.GenericSingletons;
 using Player.Controls;
-using UnityEngine.EventSystems;
-using System.Linq;
-using SpawnManagerCore;
 
 namespace Player.InputsController
 {
+    public enum PlayerInputState { Normal, InTerritoryAreaInputs, };
     public class PlayerInputActions : MonoBehaviour
     {
+
         private PlayerIdleState _playerIdleState = new PlayerIdleState();
         private MainCharacterIdleState _mainCharacterIdleState = new MainCharacterIdleState();
+        private InTerritoryAreaInputs _inTerritoryAreaInputs = new InTerritoryAreaInputs();
 
-        private PlayerInputState _currentPlayerInput;
+        private PlayerInputStateCore _currentPlayerInput;
 
         private GameObject _spawnedTroop;
         public float MinDistanceToSpawnTroop = 1f;
@@ -25,9 +22,10 @@ namespace Player.InputsController
         {
             _playerIdleState.Init(this);
             _mainCharacterIdleState.Init(this);
+            _inTerritoryAreaInputs.Init(this);
 
 
-            _currentPlayerInput = _mainCharacterIdleState;
+            SwitchToState(PlayerInputState.Normal);
             // GameloopManager.instance.OnSwitchPlayerControl += OnPlayerControlSwitch;
         }
 
@@ -69,6 +67,23 @@ namespace Player.InputsController
             //     _spawnedTroop = SpawnManager.instance.SpawnFriendlyTroop(card.TroopType).gameObject;
             //     StartingMousePos = Input.mousePosition;
             // }
+        }
+
+
+        public void SwitchToState(PlayerInputState newInputState)
+        {
+            switch (newInputState)
+            {
+                case PlayerInputState.Normal:
+                    _currentPlayerInput = _mainCharacterIdleState;
+                    break;
+                case PlayerInputState.InTerritoryAreaInputs:
+                    _currentPlayerInput = _inTerritoryAreaInputs;
+                    break;
+                default:
+                    Debug.LogError("Unknown player input state");
+                    break;
+            }
         }
     }
 }

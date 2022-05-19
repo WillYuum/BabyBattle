@@ -3,7 +3,7 @@ using Player.InputsController;
 
 namespace Player.Controls
 {
-    public class PlayerIdleState : PlayerInputState
+    public class PlayerIdleState : PlayerInputStateCore
     {
         public override void CheckInput()
         {
@@ -16,7 +16,7 @@ namespace Player.Controls
         }
     }
 
-    public class MainCharacterIdleState : PlayerInputState
+    public class MainCharacterIdleState : PlayerInputStateCore
     {
         public override void CheckInput()
         {
@@ -35,8 +35,33 @@ namespace Player.Controls
     }
 
 
+    public class InTerritoryAreaInputs : PlayerInputStateCore
+    {
+        public override void CheckInput()
+        {
+            base.CheckInput();
 
-    public abstract class PlayerInputState
+            if (Input.GetKey(KeyCode.E))
+            {
+                // _playerActions.EnterIdleStateWhileTryingToSpawnTroop();
+                GameloopManager.instance.TryTakeOverTerritory(Territory.ControlledBy.Friend);
+            }
+
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                _playerActions.HandlePlayerMove(EntityDirection.Left);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                _playerActions.HandlePlayerMove(EntityDirection.Right);
+            }
+        }
+    }
+
+
+
+    public abstract class PlayerInputStateCore
     {
         protected PlayerInputActions _playerActions;
 

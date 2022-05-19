@@ -5,18 +5,22 @@ using Troops;
 using SpawnManagerCore;
 using UnityEngine;
 using HUDCore;
+using Player.InputsController;
 using Buildings;
+using Territory;
 
 public enum PlayerControl { None, MainCharacter, Camera };
 public enum EntityDirection { Idle, Left, Right };
 
-
+public enum FriendOrFoe { Friend, Foe };
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
     public event Action<PlayerControl> OnSwitchPlayerControl;
 
-    public PlayerControl PlayerControl { get; private set; }
+    [SerializeField] public PlayerControl PlayerControl { get; private set; }
 
+
+    [SerializeField] private PlayerInputActions _playerInputActions;
 
     public int HoldingToysCount { get; private set; }
     public int MaxHoldingToysCount { get; private set; }
@@ -25,9 +29,13 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public int MaxSpawedTroopsCount { get; private set; }
 
 
+
     public event Action OnMainCharacterDied;
     public event Action OnGameLoopStarted;
     public event Action OnLoseGame;
+
+
+    public Territory.TerritoryCore HoveredTerritory { get; private set; }
 
 
     void Start()
@@ -159,6 +167,33 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
+    public void TryTakeOverTerritory(ControlledBy controlledBy)
+    {
+        if (HoveredTerritory == null)
+        {
+            Debug.LogWarning("No territory hovered");
+            return;
+        }
+
+        HoveredTerritory.TryTakeControl(controlledBy);
+
+    }
+
+    public void UpdateHoveredTerritoryState(TerritoryCore territory)
+    {
+        HoveredTerritory = territory;
+
+        if (territory == null)
+        {
+            _playerInputActions.SwitchToState(PlayerInputState.Normal);
+        }
+        else
+        {
+            _playerInputActions.SwitchToState(PlayerInputState.InTerritoryAreaInputs);
+        }
     }
 
 }

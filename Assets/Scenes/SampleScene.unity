@@ -344,7 +344,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1879859074}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -360,6 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2c5b346dd5b1124b945a8ba40114387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ToyGenerator: {fileID: 1879859075}
   _playerInputActions: {fileID: 379911899}
 --- !u!1 &987778038
 GameObject:
@@ -856,6 +858,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
+--- !u!1 &1879859073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1879859074}
+  - component: {fileID: 1879859075}
+  m_Layer: 0
+  m_Name: ToyGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1879859074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879859073}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 788831263}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1879859075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879859073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2878817b468d64c9fc541f0a95f0cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1894367767
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,6 +1412,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1165648031, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: test.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1165648031, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: coinAbility.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1165648031, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: troopAbility.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1165648031, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: toyGeneratorAbility.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1165648031, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: troopAbility.Array.data[0]._amountToGain
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1165648031, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: coinAbility.Array.data[0].<ToysGeneratedPerSec>k__BackingField
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1165648031, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: toyGeneratorAbility.Array.data[0].<ToysGeneratedPerSec>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9047391627729628581, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
       propertyPath: m_Name
       value: Territory

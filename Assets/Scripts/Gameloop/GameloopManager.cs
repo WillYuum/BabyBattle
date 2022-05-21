@@ -19,6 +19,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     [SerializeField] public PlayerControl PlayerControl { get; private set; }
 
+    [SerializeField] public ToyGeneratorCore ToyGenerator;
+
 
     [SerializeField] private PlayerInputActions _playerInputActions;
 
@@ -129,20 +131,27 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public void CollectToys(CollectToysEvent collectToysEvent)
     {
+        if (MaxHoldingToysCount == HoldingToysCount)
+        {
+            return;
+        }
+
+        if (collectToysEvent.CollectedToy)
+        {
+            Destroy(collectToysEvent.CollectedToy);
+        }
+
         if (HoldingToysCount + collectToysEvent.ToysCount > MaxHoldingToysCount)
         {
-            //Display can't collect toys message
+            HoldingToysCount = MaxHoldingToysCount;
         }
         else
         {
-            if (collectToysEvent.CollectedToy)
-            {
-                Destroy(collectToysEvent.CollectedToy);
-            }
 
             HoldingToysCount += collectToysEvent.ToysCount;
-            HUD.instance.OnUpdateToysCount.Invoke();
         }
+
+        HUD.instance.OnUpdateToysCount.Invoke();
     }
 
 
@@ -194,6 +203,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         {
             _playerInputActions.SwitchToState(PlayerInputState.InTerritoryAreaInputs);
         }
+    }
+
+    public void IncreaseMaxAmountOfTroops(int amount)
+    {
+        MaxSpawedTroopsCount += amount;
+        HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
+    }
+
+    public void DecreaseMaxAmountOfTroops(int amount)
+    {
+        MaxSpawedTroopsCount -= amount;
+        HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
     }
 
 }

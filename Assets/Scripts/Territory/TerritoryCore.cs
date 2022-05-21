@@ -1,5 +1,6 @@
 using UnityEngine;
 using GameplayUtils.Methods;
+using System.Collections.Generic;
 
 namespace Territory
 {
@@ -14,6 +15,11 @@ namespace Territory
         [SerializeField] private GameObject flag;
 
         [SerializeField] private GameObject UI;
+
+
+        [Header("Territory Abilities")]
+        [SerializeField] private GainMoreTroopsAbility[] troopAbility;
+        [SerializeField] private GainToysAbility[] toyGeneratorAbility;
 
 
         private void Awake()
@@ -84,12 +90,32 @@ namespace Territory
         private void UnlockTerritoryAbilities()
         {
             print("Unlocking territory abilities");
+
+            foreach (ITerritoryAbility ability in troopAbility)
+            {
+                ability.InvokeAbility();
+            }
+
+            foreach (ITerritoryAbility ability in toyGeneratorAbility)
+            {
+                ability.InvokeAbility();
+            }
         }
 
 
         private void LockTerritoryAbilities()
         {
             print("Locking territory abilities");
+
+            foreach (ITerritoryAbility ability in troopAbility)
+            {
+                ability.RemoveAbility();
+            }
+
+            foreach (ITerritoryAbility ability in toyGeneratorAbility)
+            {
+                ability.RemoveAbility();
+            }
         }
 
 
@@ -101,9 +127,21 @@ namespace Territory
                 UI.SetActive(true);
 
                 GameloopManager.instance.UpdateHoveredTerritoryState(this);
+
+                CollectNewToys();
             }
         }
 
+        private void CollectNewToys()
+        {
+            foreach (var ability in toyGeneratorAbility)
+            {
+                GameloopManager.instance.CollectToys(new CollectToysEvent
+                {
+                    ToysCount = ability.GetRewards(),
+                });
+            }
+        }
 
         void OnTriggerExit2D(Collider2D other)
         {
@@ -138,5 +176,74 @@ namespace Territory
         {
             return _currentDurationTillControl / _durationToControl;
         }
+    }
+}
+
+
+public interface ITerritoryAbility
+{
+    void InvokeAbility();
+    void RemoveAbility();
+    int GetRewards();
+}
+
+
+[System.Serializable]
+public class GainMoreTroopsAbility : ITerritoryAbility
+{
+    [SerializeField] private int _amountToGain = 1;
+
+    public int GetRewards()
+    {
+        return _amountToGain;
+    }
+
+    public void InvokeAbility()
+    {
+        GameloopManager.instance.IncreaseMaxAmountOfTroops(_amountToGain);
+    }
+
+    public void RemoveAbility()
+    {
+        GameloopManager.instance.DecreaseMaxAmountOfTroops(_amountToGain);
+    }
+
+}
+
+
+
+public interface IToyGeneratorMethods
+{
+    int ToysGeneratedPerSec { get; set; }
+    void GenerateToys(int amount);
+}
+
+[System.Serializable]
+public class GainToysAbility : ITerritoryAbility, IToyGeneratorMethods
+{
+    [field: SerializeField] public int ToysGeneratedPerSec { get; set; }
+    private int collectedToys = 0;
+
+
+    public void InvokeAbility()
+    {
+        GameloopManager.instance.ToyGenerator.Add(this);
+    }
+
+    public void RemoveAbility()
+    {
+        collectedToys = 0;
+        GameloopManager.instance.ToyGenerator.Remove(this);
+    }
+
+    public void GenerateToys(int amount)
+    {
+        Debug.Log("Generating toys");
+        collectedToys += amount;
+    }
+
+    public int GetRewards()
+    {
+        return collectedToys;
     }
 }

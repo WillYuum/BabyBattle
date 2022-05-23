@@ -47,10 +47,9 @@ namespace Buildings
             {
                 _buildingUI.ToggleBuildingUI(true);
             }
-            else if (UtilMethods.CollidedWithTroop(other))
+            else if (other.TryGetComponent<FriendlyTroop>(out var friendlyTroop))
             {
-                ITroopBuildingInteraction troop = other.GetComponent<Troop>();
-                OnTroopInteractWithBuilding(troop);
+                OnTroopInteractWithBuilding(friendlyTroop);
             }
         }
 

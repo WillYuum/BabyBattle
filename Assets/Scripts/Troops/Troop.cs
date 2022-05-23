@@ -5,6 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 namespace Troops
 {
+    using System;
     using States;
 
     public enum TroopType { BabyTroop, LargeBaby, MortarBaby };
@@ -20,29 +21,40 @@ namespace Troops
 
 
 
-    public class Troop : MonoBehaviour, IDamageable, ITroopBuildingInteraction
+    public abstract class Troop : MonoBehaviour, IDamageable
     {
         protected TroopType _troopType;
-        protected float _currentHealth { get; private set; }
-        protected float _attackDelay { get; private set; }
-        protected float _moveSpeed { get; private set; }
-        protected float _attackDamage { get; private set; }
-        protected Vector2 _moveDirection { get; private set; }
+        protected FriendOrFoe _friendOrFoe;
+        protected float CurrentHealth { get; private set; }
+        protected float AttackDelay { get; private set; }
+        protected float DefaultMoveSpeed { get; private set; }
+        protected float CurrentMoveSpeed { get; private set; }
+        protected float AttackDamage { get; private set; }
+        protected Vector2 MoveDirection { get; private set; }
 
+        protected event Action _notifyFollowers;
+
+
+        private TroopState _troopState;
         private TroopStateCore _currentTroopState;
 
 
-        public void InitTroop(TroopType troopType, EntityDirection moveDir)
+        [SerializeField] private GameObject _existenceCollider;
+
+
+        public void InitTroop(TroopType troopType, EntityDirection moveDir, FriendOrFoe friendOrFoe)
         {
-            // _currentHealth = GameVariables.Instance.
             TroopVariable data = GameVariables.Instance.TroopVariables.GetVariable(troopType);
 
-            _currentHealth = data.StartingHealth;
-            _attackDelay = data.AttackDelay;
-            _moveSpeed = data.MoveSpeed;
-            _attackDamage = data.Damage;
+            CurrentHealth = data.StartingHealth;
+            AttackDelay = data.AttackDelay;
+            DefaultMoveSpeed = data.MoveSpeed;
+            CurrentMoveSpeed = DefaultMoveSpeed;
+            AttackDamage = data.Damage;
 
-            _moveDirection = moveDir == EntityDirection.Left ? Vector2.left : Vector2.right;
+            SetMoveDirection(moveDir);
+
+            _friendOrFoe = friendOrFoe;
 
             _currentTroopState = new TroopMoveState();
             _currentTroopState.ChangeState(_currentTroopState, this);
@@ -53,7 +65,7 @@ namespace Troops
         {
             var damageAction = new TakeDamageAction
             {
-                DamageAmount = _attackDamage,
+                DamageAmount = AttackDamage,
                 DamagedByTroop = _troopType,
             };
 
@@ -70,7 +82,7 @@ namespace Troops
 
         public void CheckForEenmies()
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, _moveDirection, 1.0f);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, 1.0f);
             if (hit.collider)
             {
                 if (hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
@@ -82,14 +94,15 @@ namespace Troops
 
         public void Move()
         {
-            transform.position += (Vector3)_moveDirection * _moveSpeed * Time.deltaTime;
+            transform.position += (Vector3)MoveDirection * CurrentMoveSpeed * Time.deltaTime;
         }
 
         public virtual void TakeDamage(TakeDamageAction damageAction)
         {
-            _currentHealth -= damageAction.DamageAmount;
-            if (_currentHealth <= 0)
+            CurrentHealth -= damageAction.DamageAmount;
+            if (CurrentHealth <= 0)
             {
+                NotifyFollowers();
                 Die();
             }
         }
@@ -100,30 +113,28 @@ namespace Troops
             Destroy(gameObject, 1.0f);
         }
 
-        public bool TryAccessBuilding(BuildingCore buildingCore)
+        protected void SetMoveDirection(EntityDirection direction)
         {
-            return true;
-        }
-
-        public void MoveToIdlePositionInBuilding(Transform target)
-        {
-            float duration = (target.position.x - transform.position.x) / _moveSpeed;
-            transform.DOMoveX(target.position.x, duration).OnComplete(() =>
+            var position = _existenceCollider.transform.localPosition;
+            if (direction == EntityDirection.Left)
             {
-                ChangeState(TroopState.Idle);
-            });
+                position.x = -position.x;
+                position.y = -position.y;
+                _existenceCollider.transform.localPosition = position;
+            }
+            else
+            {
+                position.x = Math.Abs(position.x);
+                position.y = Math.Abs(position.y);
+                _existenceCollider.transform.localPosition = position;
+            }
+
+            MoveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
         }
 
-        public void MoveOutOfBuilding(EntityDirection direction)
-        {
-            _moveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
-
-            ChangeState(TroopState.Moving);
-        }
 
 
-
-        private void ChangeState(TroopState newState)
+        protected void ChangeState(TroopState newState)
         {
             switch (newState)
             {
@@ -142,7 +153,72 @@ namespace Troops
                     break;
             }
 
+            _troopState = newState;
             _currentTroopState.ChangeState(_currentTroopState, this);
         }
+
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.layer != LayerMask.NameToLayer("ExistenceCollider")) { return; }
+
+            if (collision.transform.parent.TryGetComponent<Troop>(out Troop troop))
+            {
+                if (troop._friendOrFoe != _friendOrFoe)
+                {
+                    return;
+                }
+
+                if (troop._troopState != TroopState.Moving)
+                {
+                    return;
+                }
+
+                bool movingInSameDirection = troop.MoveDirection == MoveDirection;
+                if (movingInSameDirection)
+                {
+                    CurrentMoveSpeed = troop.CurrentMoveSpeed;
+                }
+
+            }
+        }
+
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.gameObject.layer != LayerMask.NameToLayer("ExistenceCollider")) { return; }
+
+            if (collision.transform.parent.TryGetComponent<Troop>(out Troop troop))
+            {
+                if (troop._friendOrFoe != _friendOrFoe)
+                {
+                    return;
+                }
+
+                if (troop._troopState != TroopState.Moving)
+                {
+                    return;
+                }
+
+
+                bool movingInSameDirection = troop.MoveDirection == MoveDirection;
+                if (movingInSameDirection)
+                {
+                    CurrentMoveSpeed = DefaultMoveSpeed;
+                }
+
+            }
+        }
+
+
+        protected void NotifyFollowers()
+        {
+            if (_notifyFollowers != null)
+            {
+                _notifyFollowers.Invoke();
+                _notifyFollowers = null;
+            }
+        }
+
     }
 }

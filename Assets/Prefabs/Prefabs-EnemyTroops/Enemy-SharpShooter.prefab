@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8105742366708466321, guid: 2fa19576f087fca4995ed5320b18af2a, type: 3}
       propertyPath: m_Name
-      value: BabySharpShooter
+      value: Enemy-SharpShooter
       objectReference: {fileID: 0}
     - target: {fileID: 8105742366708466323, guid: 2fa19576f087fca4995ed5320b18af2a, type: 3}
       propertyPath: m_RootOrder
@@ -57,3 +57,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fa19576f087fca4995ed5320b18af2a, type: 3}
+--- !u!1 &7650662508846762420 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8105742366708466321, guid: 2fa19576f087fca4995ed5320b18af2a, type: 3}
+  m_PrefabInstance: {fileID: 1896574788932717349}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &590021292863296007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7650662508846762420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8356a0a3d903e1049bb9c7516d58e594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

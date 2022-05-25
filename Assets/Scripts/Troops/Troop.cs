@@ -61,34 +61,56 @@ namespace Troops
 
         }
 
-        public virtual void Attack()
-        {
-            var damageAction = new TakeDamageAction
-            {
-                DamageAmount = AttackDamage,
-                DamagedByTroop = _troopType,
-            };
+        public abstract void Attack(IDamageable targets = null, IDamageable[] multipleTargets = null);
 
+        // public virtual void Attack(IDamageable targets, IDamageable[] multipleTargets = null)
+        // {
+        //     var damageAction = new TakeDamageAction
+        //     {
+        //         DamageAmount = AttackDamage,
+        //         DamagedByTroop = _troopType,
+        //     };
 
-            //Raycast towards direction and check if target is hit
-
-            //If target is hit, get the target's IDamageable interface and call TakeDamage() and pass the  damage action
-        }
+        //     if (multipleTargets != null)
+        //     {
+        //         foreach (var item in multipleTargets)
+        //         {
+        //             item.TakeDamage(damageAction);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         targets.TakeDamage(damageAction);
+        //     }
+        // }
+    
 
         void Update()
         {
             _currentTroopState.Execute();
         }
 
-        public void CheckForEenmies()
+        public bool CheckForEeneies(out IDamageable damageableTroops)
         {
+            damageableTroops = null;
+
+
             RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, 1.0f);
             if (hit.collider)
             {
                 if (hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    // damageable.TakeDamage(new TakeDamageAction(10, _troopType));
+                    damageableTroops = damageable;
                 }
+            }
+
+            if (damageableTroops != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -99,6 +121,7 @@ namespace Troops
 
         public virtual void TakeDamage(TakeDamageAction damageAction)
         {
+
             CurrentHealth -= damageAction.DamageAmount;
             if (CurrentHealth <= 0)
             {
@@ -144,9 +167,9 @@ namespace Troops
                 case TroopState.Moving:
                     _currentTroopState = new TroopMoveState();
                     break;
-                // case TroopState.Attacking:
-                //     _currentTroopState = new TroopAttackState();
-                //     break;
+                case TroopState.Attacking:
+                    _currentTroopState = new TroopAttackState();
+                    break;
                 default:
                     _currentTroopState = new TroopIdleState();
                     Debug.Log("Invalid Troop State");

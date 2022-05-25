@@ -219,7 +219,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
 }
 
-interface IDamageable
+public interface IDamageable
 {
     void TakeDamage(TakeDamageAction damage);
 }

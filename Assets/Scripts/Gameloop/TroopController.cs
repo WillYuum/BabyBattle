@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Troops
+public class TroopController : MonoBehaviour
 {
-    public class FoeTroop : Troop
-    {
-
-    }
+    
 }

@@ -748,6 +748,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Buildable
       objectReference: {fileID: 0}
+    - target: {fileID: 4537283342292031560, guid: 6a910b4c6ca6de943b84d5ec68c9e061, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4537283342292031561, guid: 6a910b4c6ca6de943b84d5ec68c9e061, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -835,6 +839,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefensiveWall
       objectReference: {fileID: 0}
+    - target: {fileID: 1120096075976647682, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1120096075976647683, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -881,11 +889,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5452654712416578252, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5452654712416578252, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
@@ -1474,6 +1482,10 @@ PrefabInstance:
     - target: {fileID: 9047391627729628581, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
       propertyPath: m_Name
       value: Territory
+      objectReference: {fileID: 0}
+    - target: {fileID: 9047391627729628581, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9047391627729628582, guid: 4c5128d9d93bf104d9774966e1ecef71, type: 3}
       propertyPath: m_RootOrder

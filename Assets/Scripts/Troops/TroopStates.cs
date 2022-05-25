@@ -3,6 +3,28 @@ using UnityEngine;
 
 namespace Troops.States
 {
+
+    public class TroopAttackState : TroopStateCore
+    {
+        public override void EnterState()
+        {
+            //Play running animation
+        }
+
+        public override void ExitState()
+        {
+        }
+
+        public override void Execute()
+        {
+            if (_troop.CheckForEeneies(out IDamageable damageable))
+            {
+                _troop.Attack(damageable);
+            }
+
+        }
+    }
+
     public class TroopMoveState : TroopStateCore
     {
         public override void EnterState()
@@ -40,23 +62,13 @@ namespace Troops.States
     }
 
 
-    public class TroopStateCore
+    public abstract class TroopStateCore
     {
         protected Troop _troop;
 
-        public virtual void EnterState()
-        {
-
-        }
-        public virtual void Execute()
-        {
-
-        }
-
-        public virtual void ExitState()
-        {
-
-        }
+        public abstract void EnterState();
+        public abstract void Execute();
+        public abstract void ExitState();
 
         public void ChangeState(TroopStateCore newState, Troop troop)
         {

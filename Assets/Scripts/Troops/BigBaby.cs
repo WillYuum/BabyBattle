@@ -21,7 +21,7 @@ namespace Troops.TroopClasses
                         var damageAction = new TakeDamageAction
                         {
                             DamageAmount = AttackDamage,
-                            DamagedByTroop = _troopType,
+                            DamagedByTroop = TroopType,
                         };
 
                         h.collider.GetComponent<IDamageable>().TakeDamage(damageAction);

@@ -22,31 +22,26 @@ namespace Troops
 
     public abstract class Troop : MonoBehaviour, IDamageable
     {
-        protected TroopType _troopType;
-        protected FriendOrFoe _friendOrFoe;
-        protected float CurrentHealth { get; private set; }
+        public TroopType TroopType { get; private set; }
+        public FriendOrFoe FriendOrFoe { get; private set; }
+        public float CurrentHealth { get; private set; }
         public float AttackDelay { get; private set; }
-        protected float DefaultMoveSpeed { get; private set; }
-        protected float CurrentMoveSpeed { get; private set; }
-        protected float AttackDamage { get; private set; }
-        protected Vector2 MoveDirection { get; private set; }
-        protected float attackDistance { get; private set; }
+        public float DefaultMoveSpeed { get; private set; }
+        public float CurrentMoveSpeed { get; private set; }
+        public float AttackDamage { get; private set; }
+        public Vector2 MoveDirection { get; private set; }
+        public float attackDistance { get; private set; }
 
         //TODO: it's better the current to know about only one troop behind him
         protected event Action _notifyFollowers;
 
 
-        private TroopState _troopState;
+        public TroopState TroopState { get; private set; }
         private TroopStateCore _currentTroopState;
 
 
 
-        //TODO: It's better we create a script for this gameobject and let it handle checking for other surrounding troop
-        [SerializeField] private GameObject _existenceCollider;
-
-
-
-
+        [SerializeField] private GameObject _characterVisual;
 
         void Update()
         {
@@ -68,7 +63,7 @@ namespace Troops
 
             SetMoveDirection(moveDir);
 
-            _friendOrFoe = friendOrFoe;
+            FriendOrFoe = friendOrFoe;
 
             _currentTroopState = new TroopMoveState();
             _currentTroopState.ChangeState(_currentTroopState, this);
@@ -84,7 +79,7 @@ namespace Troops
             {
                 if (collider.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    if (collider.GetComponent<Troop>()._friendOrFoe != _friendOrFoe)
+                    if (collider.GetComponent<Troop>().FriendOrFoe != FriendOrFoe)
                     {
                         ChangeState(TroopState.Attacking);
                     }
@@ -118,20 +113,7 @@ namespace Troops
 
         protected void SetMoveDirection(EntityDirection direction)
         {
-            var position = _existenceCollider.transform.localPosition;
-            if (direction == EntityDirection.Left)
-            {
-                position.x = -position.x;
-                position.y = -position.y;
-                _existenceCollider.transform.localPosition = position;
-            }
-            else
-            {
-                position.x = Math.Abs(position.x);
-                position.y = Math.Abs(position.y);
-                _existenceCollider.transform.localPosition = position;
-            }
-
+            _characterVisual.transform.localScale = new Vector3(direction == EntityDirection.Left ? -1.0f : 1.0f, 1.0f, 1.0f);
             MoveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
         }
 
@@ -156,61 +138,13 @@ namespace Troops
                     break;
             }
 
-            _troopState = newState;
+            TroopState = newState;
             _currentTroopState.ChangeState(_currentTroopState, this);
         }
 
-
-        private void OnTriggerEnter2D(Collider2D collision)
+        public void SetCurrentMoveSpeed(float speed)
         {
-            if (collision.gameObject.layer != LayerMask.NameToLayer("ExistenceCollider")) { return; }
-
-            if (collision.transform.parent.TryGetComponent<Troop>(out Troop troop))
-            {
-                if (troop._friendOrFoe != _friendOrFoe)
-                {
-                    return;
-                }
-
-                if (troop._troopState != TroopState.Moving)
-                {
-                    return;
-                }
-
-                bool movingInSameDirection = troop.MoveDirection == MoveDirection;
-                if (movingInSameDirection)
-                {
-                    CurrentMoveSpeed = troop.CurrentMoveSpeed;
-                }
-
-            }
-        }
-
-
-        private void OnTriggerExit2D(Collider2D collision)
-        {
-            if (collision.gameObject.layer != LayerMask.NameToLayer("ExistenceCollider")) { return; }
-
-            if (collision.transform.parent.TryGetComponent<Troop>(out Troop troop))
-            {
-                if (troop._friendOrFoe != _friendOrFoe)
-                {
-                    return;
-                }
-
-                if (troop._troopState != TroopState.Moving)
-                {
-                    return;
-                }
-
-
-                bool movingInSameDirection = troop.MoveDirection == MoveDirection;
-                if (movingInSameDirection)
-                {
-                    CurrentMoveSpeed = DefaultMoveSpeed;
-                }
-
-            }
+            CurrentMoveSpeed = speed;
         }
 
 

@@ -11,7 +11,6 @@ namespace Troops
     public enum TroopType { BabyTroop, LargeBaby, MortarBaby };
     public enum TroopState { Idle, Moving, Attacking };
 
-
     public interface ITroopBuildingInteraction
     {
         bool TryAccessBuilding(BuildingCore buildingCore);
@@ -26,12 +25,14 @@ namespace Troops
         protected TroopType _troopType;
         protected FriendOrFoe _friendOrFoe;
         protected float CurrentHealth { get; private set; }
-        protected float AttackDelay { get; private set; }
+        public float AttackDelay { get; private set; }
         protected float DefaultMoveSpeed { get; private set; }
         protected float CurrentMoveSpeed { get; private set; }
         protected float AttackDamage { get; private set; }
         protected Vector2 MoveDirection { get; private set; }
+        protected float attackDistance { get; private set; }
 
+        //TODO: it's better the current to know about only one troop behind him
         protected event Action _notifyFollowers;
 
 
@@ -39,7 +40,18 @@ namespace Troops
         private TroopStateCore _currentTroopState;
 
 
+
+        //TODO: It's better we create a script for this gameobject and let it handle checking for other surrounding troop
         [SerializeField] private GameObject _existenceCollider;
+
+
+
+
+
+        void Update()
+        {
+            _currentTroopState.Execute();
+        }
 
 
         public void InitTroop(TroopType troopType, EntityDirection moveDir, FriendOrFoe friendOrFoe)
@@ -52,67 +64,34 @@ namespace Troops
             CurrentMoveSpeed = DefaultMoveSpeed;
             AttackDamage = data.Damage;
 
+            attackDistance = 1f;
+
             SetMoveDirection(moveDir);
 
             _friendOrFoe = friendOrFoe;
 
             _currentTroopState = new TroopMoveState();
             _currentTroopState.ChangeState(_currentTroopState, this);
-
         }
 
-        public abstract void Attack(IDamageable targets = null, IDamageable[] multipleTargets = null);
 
-        // public virtual void Attack(IDamageable targets, IDamageable[] multipleTargets = null)
-        // {
-        //     var damageAction = new TakeDamageAction
-        //     {
-        //         DamageAmount = AttackDamage,
-        //         DamagedByTroop = _troopType,
-        //     };
-
-        //     if (multipleTargets != null)
-        //     {
-        //         foreach (var item in multipleTargets)
-        //         {
-        //             item.TakeDamage(damageAction);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         targets.TakeDamage(damageAction);
-        //     }
-        // }
-    
-
-        void Update()
+        public abstract void Attack();
+        public void FindEnemiesToAttack()
         {
-            _currentTroopState.Execute();
-        }
-
-        public bool CheckForEeneies(out IDamageable damageableTroops)
-        {
-            damageableTroops = null;
-
-
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, 1.0f);
-            if (hit.collider)
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance);
+            Collider2D collider = hit.collider;
+            if (collider)
             {
-                if (hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
+                if (collider.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    damageableTroops = damageable;
+                    if (collider.GetComponent<Troop>()._friendOrFoe != _friendOrFoe)
+                    {
+                        ChangeState(TroopState.Attacking);
+                    }
                 }
             }
-
-            if (damageableTroops != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
+
 
         public void Move()
         {
@@ -133,6 +112,7 @@ namespace Troops
 
         public virtual void Die()
         {
+            CancelInvoke();
             Destroy(gameObject, 1.0f);
         }
 
@@ -241,6 +221,12 @@ namespace Troops
                 _notifyFollowers.Invoke();
                 _notifyFollowers = null;
             }
+        }
+
+        public IDamageable[] _targets { get; private set; }
+        protected void LockOnTarget(IDamageable[] target)
+        {
+            _targets = target;
         }
 
     }

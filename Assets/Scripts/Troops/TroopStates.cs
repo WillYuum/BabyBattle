@@ -6,9 +6,10 @@ namespace Troops.States
 
     public class TroopAttackState : TroopStateCore
     {
+        private float _delayTillHit;
         public override void EnterState()
         {
-            //Play running animation
+            _delayTillHit = _troop.AttackDelay;
         }
 
         public override void ExitState()
@@ -17,11 +18,12 @@ namespace Troops.States
 
         public override void Execute()
         {
-            if (_troop.CheckForEeneies(out IDamageable damageable))
+            _delayTillHit -= Time.deltaTime;
+            if (_delayTillHit <= 0)
             {
-                _troop.Attack(damageable);
+                _troop.Attack();
+                _delayTillHit = _troop.AttackDelay;
             }
-
         }
     }
 
@@ -39,6 +41,7 @@ namespace Troops.States
         public override void Execute()
         {
             _troop.Move();
+            _troop.FindEnemiesToAttack();
         }
     }
 
@@ -57,7 +60,7 @@ namespace Troops.States
 
         public override void Execute()
         {
-            // _troop.CheckForEenmies();
+            _troop.FindEnemiesToAttack();
         }
     }
 

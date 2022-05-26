@@ -1,26 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Troops;
 
-public class SharpShooter : Troop
+namespace Troops.TroopClasses
 {
-    public override void Attack(IDamageable targets = null, IDamageable[] multipleTargets = null)
+    public class SharpShooter : Troop
     {
-            #if UNITY_EDITOR
-        if(targets == null){
-            Debug.LogError("Targets is null, make sure you are passing in a target");
-            return; 
-        }
-#endif
+        public override void Attack()
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance);
 
-            var damageAction = new TakeDamageAction
+            if (hit.collider)
             {
-                DamageAmount = AttackDamage,
-                DamagedByTroop = _troopType,
-            };
+                var damageAction = new TakeDamageAction
+                {
+                    DamageAmount = AttackDamage,
+                    DamagedByTroop = _troopType,
+                };
 
-            targets.TakeDamage(damageAction);
-            
+                hit.collider.GetComponent<IDamageable>().TakeDamage(damageAction);
+            }
+        }
     }
 }

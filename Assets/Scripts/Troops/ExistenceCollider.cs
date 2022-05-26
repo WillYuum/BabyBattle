@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Troops;
+using System;
 
 public class ExistenceCollider : MonoBehaviour
 {
@@ -14,9 +15,9 @@ public class ExistenceCollider : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer != LayerMask.NameToLayer("ExistenceCollider")) { return; }
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Troop")) { return; }
 
-        if (collision.transform.parent.TryGetComponent<Troop>(out Troop troop))
+        if (collision.gameObject.TryGetComponent<Troop>(out Troop troop))
         {
             if (troop.FriendOrFoe != _troop.FriendOrFoe)
             {
@@ -40,9 +41,9 @@ public class ExistenceCollider : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer != LayerMask.NameToLayer("ExistenceCollider")) { return; }
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Troop")) { return; }
 
-        if (collision.transform.parent.TryGetComponent<Troop>(out Troop troop))
+        if (collision.gameObject.TryGetComponent<Troop>(out Troop troop))
         {
             if (troop.FriendOrFoe != _troop.FriendOrFoe)
             {
@@ -61,6 +62,24 @@ public class ExistenceCollider : MonoBehaviour
                 _troop.SetCurrentMoveSpeed(_troop.DefaultMoveSpeed);
             }
 
+        }
+    }
+
+
+    public void SwitchDirection(EntityDirection direction)
+    {
+        var position = transform.localPosition;
+        if (direction == EntityDirection.Left)
+        {
+            position.x = -position.x;
+            position.y = -position.y;
+            transform.localPosition = position;
+        }
+        else
+        {
+            position.x = Math.Abs(position.x);
+            position.y = Math.Abs(position.y);
+            transform.localPosition = position;
         }
     }
 }

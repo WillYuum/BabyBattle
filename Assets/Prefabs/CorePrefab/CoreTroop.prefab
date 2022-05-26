@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 5423619208707616207}
   - component: {fileID: 8519349222583485777}
   - component: {fileID: 5783283882001786686}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: CoreTroop
   m_TagString: Troop
   m_Icon: {fileID: 0}

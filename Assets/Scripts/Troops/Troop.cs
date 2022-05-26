@@ -39,7 +39,7 @@ namespace Troops
         public TroopState TroopState { get; private set; }
         private TroopStateCore _currentTroopState;
 
-
+        private ExistenceCollider _existenceCollider;
 
         [SerializeField] private GameObject _characterVisual;
 
@@ -61,25 +61,29 @@ namespace Troops
 
             attackDistance = 1f;
 
+            //NOTE: This is a temp solution, need to be changed for scale
+            _existenceCollider = transform.Find("ExistenceCollider").GetComponent<ExistenceCollider>();
+
             SetMoveDirection(moveDir);
 
             FriendOrFoe = friendOrFoe;
 
-            _currentTroopState = new TroopMoveState();
-            _currentTroopState.ChangeState(_currentTroopState, this);
+
+            ChangeState(TroopState.Moving);
         }
 
 
         public abstract void Attack();
         public void FindEnemiesToAttack()
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance);
+            var layer = (1 << LayerMask.NameToLayer("Troop") | (1 << LayerMask.NameToLayer("Building")));
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance, layer);
             Collider2D collider = hit.collider;
-            if (collider)
+            if (collider != null)
             {
-                if (collider.TryGetComponent<IDamageable>(out IDamageable damageable))
+                if (collider.TryGetComponent<Troop>(out Troop troop))
                 {
-                    if (collider.GetComponent<Troop>().FriendOrFoe != FriendOrFoe)
+                    if (troop.FriendOrFoe != FriendOrFoe)
                     {
                         ChangeState(TroopState.Attacking);
                     }
@@ -114,6 +118,7 @@ namespace Troops
         protected void SetMoveDirection(EntityDirection direction)
         {
             _characterVisual.transform.localScale = new Vector3(direction == EntityDirection.Left ? -1.0f : 1.0f, 1.0f, 1.0f);
+            _existenceCollider.SwitchDirection(direction);
             MoveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
         }
 

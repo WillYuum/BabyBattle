@@ -39,6 +39,12 @@ namespace EditorExtensions
                 }
             }
 
+            if (obj as T == null)
+            {
+                string errorMsgOne = "The field '" + property.displayName + "' is not of type '" + typeof(T).Name + "'.";
+                string errorMessageTwo = "Please make sure that the field is of type '" + typeof(T).Name + "'.";
+                throw new System.InvalidCastException(errorMsgOne + "\n" + errorMessageTwo);
+            }
 
             return (T)obj;
         }

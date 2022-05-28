@@ -41,7 +41,7 @@ namespace Troops.States
         public override void Execute()
         {
             _troop.Move();
-            _troop.FindEnemiesToAttack();
+            _troop.FindTargetToAttack();
         }
     }
 
@@ -60,7 +60,7 @@ namespace Troops.States
 
         public override void Execute()
         {
-            _troop.FindEnemiesToAttack();
+            _troop.FindTargetToAttack();
         }
     }
 

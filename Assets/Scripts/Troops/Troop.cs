@@ -5,7 +5,6 @@ using DG.Tweening;
 using UnityEngine;
 namespace Troops
 {
-    using System;
     using States;
 
     public enum TroopType { BabyTroop, LargeBaby, MortarBaby };
@@ -33,7 +32,8 @@ namespace Troops
         public float attackDistance { get; private set; }
 
         //TODO: it's better the current to know about only one troop behind him
-        protected event Action _notifyFollowers;
+        // protected event Action _notifyFollowers;
+        private Troop _troopBehind;
 
 
         public TroopState TroopState { get; private set; }
@@ -74,7 +74,7 @@ namespace Troops
 
 
         public abstract void Attack();
-        public void FindEnemiesToAttack()
+        public void FindTargetToAttack()
         {
             var layer = (1 << LayerMask.NameToLayer("Troop") | (1 << LayerMask.NameToLayer("Building")));
             RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance, layer);
@@ -103,7 +103,7 @@ namespace Troops
             CurrentHealth -= damageAction.DamageAmount;
             if (CurrentHealth <= 0)
             {
-                NotifyFollowers();
+                UpdateMoveSpeedOnTroopBehind();
                 Die();
             }
         }
@@ -111,7 +111,6 @@ namespace Troops
 
         public virtual void Die()
         {
-            CancelInvoke();
             Destroy(gameObject, 1.0f);
         }
 
@@ -152,21 +151,12 @@ namespace Troops
             CurrentMoveSpeed = speed;
         }
 
-
-        protected void NotifyFollowers()
+        protected void UpdateMoveSpeedOnTroopBehind()
         {
-            if (_notifyFollowers != null)
+            if (_troopBehind != null)
             {
-                _notifyFollowers.Invoke();
-                _notifyFollowers = null;
+                _troopBehind.SetCurrentMoveSpeed(_troopBehind.DefaultMoveSpeed);
             }
         }
-
-        public IDamageable[] _targets { get; private set; }
-        protected void LockOnTarget(IDamageable[] target)
-        {
-            _targets = target;
-        }
-
     }
 }

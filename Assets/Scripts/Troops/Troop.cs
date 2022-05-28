@@ -7,7 +7,7 @@ namespace Troops
 {
     using States;
 
-    public enum TroopType { BabyTroop, LargeBaby, MortarBaby };
+    public enum TroopType { SharpShooter, BabyTank, MortarBaby };
     public enum TroopState { Idle, Moving, Attacking };
 
     public interface ITroopBuildingInteraction
@@ -21,7 +21,7 @@ namespace Troops
 
     public abstract class Troop : MonoBehaviour, IDamageable
     {
-        public TroopType TroopType { get; private set; }
+        [field: SerializeField] public TroopType TroopType { get; private set; }
         public FriendOrFoe FriendOrFoe { get; private set; }
         public float CurrentHealth { get; private set; }
         public float AttackDelay { get; private set; }
@@ -31,8 +31,6 @@ namespace Troops
         public Vector2 MoveDirection { get; private set; }
         public float attackDistance { get; private set; }
 
-        //TODO: it's better the current to know about only one troop behind him
-        // protected event Action _notifyFollowers;
         private Troop _troopBehind;
 
 
@@ -49,9 +47,9 @@ namespace Troops
         }
 
 
-        public void InitTroop(TroopType troopType, EntityDirection moveDir, FriendOrFoe friendOrFoe)
+        public void InitTroop(EntityDirection moveDir, FriendOrFoe friendOrFoe)
         {
-            TroopVariable data = GameVariables.Instance.TroopVariables.GetVariable(troopType);
+            TroopVariable data = GameVariables.Instance.TroopVariables.GetVariable(TroopType);
 
             CurrentHealth = data.StartingHealth;
             AttackDelay = data.AttackDelay;

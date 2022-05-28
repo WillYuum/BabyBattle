@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using SpawnManagerCore;
 
 
 namespace Buildings.BuildableComponent
@@ -26,7 +23,7 @@ namespace Buildings.BuildableComponent
             GameloopManager.instance.HandleConstructBuilding(new ConstructBuildingAction
             {
                 BuildingType = buildingType,
-                Cost = 1,
+                Cost = 1, //TODO: get cost from building type
                 SpawnPoint = transform.position,
             }, StartBuilding);
         }

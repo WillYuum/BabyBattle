@@ -720,22 +720,28 @@ MonoBehaviour:
   _friendlyTroopsPrefabs:
   - troopType: 0
     prefabConfig:
-      prefab: {fileID: 8105742366708466321, guid: 2fa19576f087fca4995ed5320b18af2a, type: 3}
+      _prefab: {fileID: 0}
   - troopType: 1
     prefabConfig:
-      prefab: {fileID: 4094519946160955849, guid: 57844fd6dc8e62849b92e69652e84e7b, type: 3}
+      _prefab: {fileID: 0}
   _troopCampBuilding:
-    prefab: {fileID: 1288159799944038121, guid: 485ff870de4f948489310b2df901ffb6, type: 3}
+    _prefab: {fileID: 0}
   _defensiveWallBuilding:
-    prefab: {fileID: 1120096075976647682, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
+    _prefab: {fileID: 0}
   _enemyTroopSpawnPoints:
     _array:
     - {fileID: 2070721246}
     - {fileID: 1747853513}
     - {fileID: 1091256184}
     - {fileID: 1894367768}
-  _bigBabyPrefabConfig:
-    prefab: {fileID: 7650662508846762420, guid: c1826e0b1f880af4eafeb86122d146e5, type: 3}
+  _friendlyTroopCampPrefabs: []
+  _enemyTroopsPrefabs:
+  - troopType: 1
+    prefabConfig:
+      _prefab: {fileID: 978346842766237119, guid: 50a06cecf8c0f564a85be76e150e4e71, type: 3}
+  - troopType: 0
+    prefabConfig:
+      _prefab: {fileID: 5488779898829361690, guid: d0bc544917011a74b8d991530fe4d745, type: 3}
   spawnDelay: 3
 --- !u!1001 &1607950052
 PrefabInstance:

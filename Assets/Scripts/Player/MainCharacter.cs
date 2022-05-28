@@ -26,7 +26,7 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, IDamageable/
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var damageAction = new TakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.LargeBaby };
+            var damageAction = new TakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.BabyTank };
             TakeDamage(damageAction);
         }
     }

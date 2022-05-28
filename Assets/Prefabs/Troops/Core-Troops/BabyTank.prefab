@@ -79,4 +79,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c54fc0df1f1e548a129897c10e6bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <TroopType>k__BackingField: 1
   _characterVisual: {fileID: 724643466418081062}

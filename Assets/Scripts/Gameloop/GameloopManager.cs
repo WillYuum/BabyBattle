@@ -122,7 +122,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         CurrentSpawnedTroopsCount++;
 
         var troop = SpawnManager.instance.SpawnFriendlyTroop(spawnTroopAction.TroopType, spawnTroopAction.SpawnPoint);
-        troop.InitTroop(spawnTroopAction.TroopType, spawnTroopAction.MoveDirection, FriendOrFoe.Friend);
+        troop.InitTroop(spawnTroopAction.MoveDirection, FriendOrFoe.Friend);
 
         HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
         HUD.instance.OnUpdateToysCount.Invoke();
@@ -230,7 +230,6 @@ public class ConstructBuildingAction
     public BuildingType BuildingType;
     public int Cost;
     public Vector3 SpawnPoint;
-    // public FriendOrFoe FriendOrFoe;
 }
 
 public struct CollectToysEvent

@@ -76,7 +76,6 @@ namespace EditorExtensions
             }
             else
             {
-                Debug.Log(value);
                 return SetFieldValue(fieldName, obj, value);
             }
         }

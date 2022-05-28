@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Utils.GenericSingletons;
 using Utils.ArrayUtils;
@@ -9,7 +8,7 @@ using Buildings;
 namespace SpawnManagerCore
 {
     [System.Serializable]
-    public struct TroopPrefabConfig
+    public class TroopPrefabConfig
     {
         public TroopType troopType;
         public PrefabConfig prefabConfig;
@@ -26,7 +25,17 @@ namespace SpawnManagerCore
         [SerializeField] private PseudoRandArray<Transform> _enemyTroopSpawnPoints;
 
 
-        [SerializeField] private PrefabConfig _bigBabyPrefabConfig;
+        [System.Serializable]
+        public class TroopToSpawn
+        {
+            [SerializeField] public TroopType troopType;
+            [SerializeField] public PrefabConfig prefabConfig;
+        }
+
+
+        [SerializeField] private TroopToSpawn[] _friendlyTroopCampPrefabs;
+        [SerializeField] private TroopToSpawn[] _enemyTroopsPrefabs;
+
 
         [SerializeField] private float spawnDelay = 3.0f;
 
@@ -75,11 +84,10 @@ namespace SpawnManagerCore
             while (gameObject.activeSelf)
             {
                 yield return new WaitForSeconds(spawnDelay);
-                _bigBabyPrefabConfig.CreateGameObject(
+                _enemyTroopsPrefabs[0].prefabConfig.CreateGameObject(
                     _enemyTroopSpawnPoints.PickNext().position,
                     Quaternion.identity,
-                    transform
-                );
+                    transform);
             }
         }
 

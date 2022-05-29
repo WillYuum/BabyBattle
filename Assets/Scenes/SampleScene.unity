@@ -721,10 +721,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28eada4c7f05fb45bbd7a85a1ab32a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _troopCampBuilding:
-    _prefab: {fileID: 0}
-  _defensiveWallBuilding:
-    _prefab: {fileID: 0}
   _friendlyTroopsPrefabs:
   - troopType: 1
     prefabConfig:
@@ -735,10 +731,14 @@ MonoBehaviour:
   _enemyTroopsPrefabs:
   - troopType: 1
     prefabConfig:
-      _prefab: {fileID: 978346842766237119, guid: 50a06cecf8c0f564a85be76e150e4e71, type: 3}
+      _prefab: {fileID: 3391349271619960564, guid: c644d241b2b283d498351b36758a554e, type: 3}
   - troopType: 0
     prefabConfig:
-      _prefab: {fileID: 5488779898829361690, guid: d0bc544917011a74b8d991530fe4d745, type: 3}
+      _prefab: {fileID: 367588687309327443, guid: fa368e5c6ffac4848b308094965f1531, type: 3}
+  _defensiveWallBuilding:
+    _prefab: {fileID: 0}
+  _troopCampBuilding:
+    _prefab: {fileID: 0}
 --- !u!1001 &1607950052
 PrefabInstance:
   m_ObjectHideFlags: 0

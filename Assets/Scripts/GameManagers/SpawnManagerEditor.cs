@@ -17,25 +17,24 @@ public class SpawnManagerEditor : Editor
 
         if (GUILayout.Button("Populate troops"))
         {
+            PopulateAllTroops("_friendlyTroopsPrefabs", "Assets/Prefabs/Troops/Friendly/");
+            PopulateAllTroops("_enemyTroopsPrefabs", "Assets/Prefabs/Troops/Enemy/");
 
-            SpawnManager myTarget = (SpawnManager)target;
 
-
-            PopulateAllTroops("_friendlyTroopsPrefabs");
-            PopulateAllTroops("_enemyTroopsPrefabs");
-
+            //FIXME: Setting data does work but doesn't seem to update scene serialized object, I need to do another change to tell the scene to update 
+            // the serialized object, need to find a solution for this
             Debug.Log("All troops populated");
         }
     }
 
 
-    private void PopulateAllTroops(string propertyName)
+    private void PopulateAllTroops(string propertyName, string path)
     {
-        SerializedProperty friendlyTroopObject = GetSerializedProperty(propertyName);
-        var troopToSpawn = friendlyTroopObject.GetValue<SpawnManager.TroopToSpawn[]>();
+        SerializedProperty troopsObject = GetSerializedProperty(propertyName);
+        var troopToSpawn = troopsObject.GetValue<SpawnManager.TroopToSpawn[]>();
 
 
-        var data = PrefabLoader.LoadAllPrefabsOfType("Assets/Prefabs/Troops/Friendly/");
+        var data = PrefabLoader.LoadAllPrefabsOfType(path);
 
         SpawnManager.TroopToSpawn[] newTroopToSpawn = new SpawnManager.TroopToSpawn[data.Count];
 
@@ -47,7 +46,7 @@ public class SpawnManagerEditor : Editor
             Debug.Log("Updated troop to spawn: " + newTroopToSpawn[i].troopType);
         }
 
-        friendlyTroopObject.SetValue<SpawnManager.TroopToSpawn[]>(newTroopToSpawn);
+        troopsObject.SetValue<SpawnManager.TroopToSpawn[]>(newTroopToSpawn);
     }
 
 
@@ -55,6 +54,11 @@ public class SpawnManagerEditor : Editor
 
     private SerializedProperty GetSerializedProperty(string propertyName)
     {
-        return new UnityEditor.SerializedObject(target).FindProperty(propertyName);
+        return GetSerializedObject().FindProperty(propertyName);
+    }
+
+    private SerializedObject GetSerializedObject()
+    {
+        return new UnityEditor.SerializedObject(target);
     }
 }

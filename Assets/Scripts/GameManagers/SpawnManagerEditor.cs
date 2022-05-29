@@ -21,7 +21,7 @@ public class SpawnManagerEditor : Editor
             SpawnManager myTarget = (SpawnManager)target;
 
 
-            PopulateAllTroops("_friendlyTroopCampPrefabs");
+            PopulateAllTroops("_friendlyTroopsPrefabs");
             PopulateAllTroops("_enemyTroopsPrefabs");
 
             Debug.Log("All troops populated");

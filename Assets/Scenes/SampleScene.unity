@@ -264,7 +264,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &519420033
 MonoBehaviour:
@@ -348,7 +348,7 @@ Transform:
   - {fileID: 1879859074}
   - {fileID: 1097453153}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &788831264
 MonoBehaviour:
@@ -364,6 +364,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ToyGenerator: {fileID: 1879859075}
   _playerInputActions: {fileID: 379911899}
+  _enemyTroopSpawnPoints:
+    _array:
+    - {fileID: 2070721246}
+    - {fileID: 1747853513}
 --- !u!1 &987778038
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +459,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1288159799944038120, guid: 485ff870de4f948489310b2df901ffb6, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1288159799944038120, guid: 485ff870de4f948489310b2df901ffb6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -717,24 +721,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28eada4c7f05fb45bbd7a85a1ab32a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _friendlyTroopsPrefabs:
-  - troopType: 0
-    prefabConfig:
-      _prefab: {fileID: 0}
-  - troopType: 1
-    prefabConfig:
-      _prefab: {fileID: 0}
   _troopCampBuilding:
     _prefab: {fileID: 0}
   _defensiveWallBuilding:
     _prefab: {fileID: 0}
-  _enemyTroopSpawnPoints:
-    _array:
-    - {fileID: 2070721246}
-    - {fileID: 1747853513}
-    - {fileID: 1091256184}
-    - {fileID: 1894367768}
-  _friendlyTroopCampPrefabs: []
+  _friendlyTroopsPrefabs:
+  - troopType: 1
+    prefabConfig:
+      _prefab: {fileID: 978346842766237119, guid: 50a06cecf8c0f564a85be76e150e4e71, type: 3}
+  - troopType: 0
+    prefabConfig:
+      _prefab: {fileID: 5488779898829361690, guid: d0bc544917011a74b8d991530fe4d745, type: 3}
   _enemyTroopsPrefabs:
   - troopType: 1
     prefabConfig:
@@ -742,7 +739,6 @@ MonoBehaviour:
   - troopType: 0
     prefabConfig:
       _prefab: {fileID: 5488779898829361690, guid: d0bc544917011a74b8d991530fe4d745, type: 3}
-  spawnDelay: 3
 --- !u!1001 &1607950052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -760,7 +756,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4537283342292031561, guid: 6a910b4c6ca6de943b84d5ec68c9e061, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4537283342292031561, guid: 6a910b4c6ca6de943b84d5ec68c9e061, type: 3}
       propertyPath: m_LocalPosition.x
@@ -828,7 +824,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747853512}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.86, y: -1.18, z: 0}
+  m_LocalPosition: {x: -21.1, y: -1.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 555023729}
@@ -851,7 +847,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1120096075976647683, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1120096075976647683, guid: 7c3a2d6c41f676f4e82e97ae6cf047d2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1156,7 +1152,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2070721245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.69, y: -1.18, z: 0}
+  m_LocalPosition: {x: -16.6, y: -1.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 555023729}

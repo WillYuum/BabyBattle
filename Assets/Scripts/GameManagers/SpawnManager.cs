@@ -1,28 +1,20 @@
 using System.Collections;
 using UnityEngine;
 using Utils.GenericSingletons;
-using Utils.ArrayUtils;
 using GameplayUtils.Prefabs;
 using Troops;
 using Buildings;
 namespace SpawnManagerCore
 {
-    [System.Serializable]
-    public class TroopPrefabConfig
-    {
-        public TroopType troopType;
-        public PrefabConfig prefabConfig;
-    }
+
+
+    /*
+     SpawnManager is responsible of just spawning prefabs/objects in the world.
+    */
     public class SpawnManager : MonoBehaviourSingleton<SpawnManager>
     {
 
-        [SerializeField] private TroopPrefabConfig[] _friendlyTroopsPrefabs;
 
-        [SerializeField] private PrefabConfig _troopCampBuilding;
-        [SerializeField] private PrefabConfig _defensiveWallBuilding;
-
-
-        [SerializeField] private PseudoRandArray<Transform> _enemyTroopSpawnPoints;
 
 
         [System.Serializable]
@@ -33,64 +25,33 @@ namespace SpawnManagerCore
         }
 
 
-        [SerializeField] private TroopToSpawn[] _friendlyTroopCampPrefabs;
+        [Header("Troops")]
+        [SerializeField] private TroopToSpawn[] _friendlyTroopsPrefabs;
         [SerializeField] private TroopToSpawn[] _enemyTroopsPrefabs;
 
+        //TODO: Need to implement similar logic to TroopToSpawn[] when working on building logic
+        [Header("buildings")]
+        [SerializeField] private PrefabConfig _defensiveWallBuilding;
+        [SerializeField] private PrefabConfig _troopCampBuilding;
 
-        [SerializeField] private float spawnDelay = 3.0f;
 
-
-        void Awake()
+        public Troop SpawnTroop(TroopType troopType, Vector3 position, FriendOrFoe friendOrFoe)
         {
-            // GameloopManager.instance.OnGameLoopStarted += () => ToggleSpawnEnemy(true);
-            // GameloopManager.instance.OnLoseGame += () => ToggleSpawnEnemy(false);
-        }
+            Troop troop = null;
+            var troopArray = friendOrFoe == FriendOrFoe.Friend ? _friendlyTroopsPrefabs : _enemyTroopsPrefabs;
 
-        public Troop SpawnFriendlyTroop(TroopType troopType, Vector3 position)
-        {
-            for (int i = 0; i < _friendlyTroopsPrefabs.Length; i++)
+            for (int i = 0; i < troopArray.Length; i++)
             {
-                if (_friendlyTroopsPrefabs[i].troopType == troopType)
+                if (troopArray[i].troopType == troopType)
                 {
-                    return _friendlyTroopsPrefabs[i].prefabConfig.CreateGameObject(position, Quaternion.identity).GetComponent<Troop>();
+                    var spawnedTroop = troopArray[i].prefabConfig.CreateGameObject(position, Quaternion.identity);
+                    troop = spawnedTroop.GetComponent<Troop>();
+                    break;
                 }
             }
 
-#if UNITY_EDITOR
-            Debug.LogError("No prefab found for troop type: " + troopType);
-#endif
-
-            return null;
+            return troop;
         }
-
-
-
-        private void ToggleSpawnEnemy(bool canSpawn)
-        {
-            if (canSpawn)
-            {
-                Debug.Log("Started spawning enemies");
-                StartCoroutine(SpawnEnemies());
-            }
-            else
-            {
-                Debug.Log("Stopped spawning enemies");
-                StopCoroutine(SpawnEnemies());
-            }
-        }
-
-        private IEnumerator SpawnEnemies()
-        {
-            while (gameObject.activeSelf)
-            {
-                yield return new WaitForSeconds(spawnDelay);
-                _enemyTroopsPrefabs[0].prefabConfig.CreateGameObject(
-                    _enemyTroopSpawnPoints.PickNext().position,
-                    Quaternion.identity,
-                    transform);
-            }
-        }
-
 
 
         public GameObject SpawnBuilding(BuildingType buildingType, Vector3 position)
@@ -106,5 +67,6 @@ namespace SpawnManagerCore
                     return _troopCampBuilding.CreateGameObject(position, Quaternion.identity);
             }
         }
+
     }
 }

@@ -22,7 +22,7 @@ namespace Troops
     public abstract class Troop : MonoBehaviour, IDamageable
     {
         [field: SerializeField] public TroopType TroopType { get; private set; }
-        public FriendOrFoe FriendOrFoe { get; private set; }
+        [field: SerializeField] public FriendOrFoe FriendOrFoe { get; private set; }
         public float CurrentHealth { get; private set; }
         public float AttackDelay { get; private set; }
         public float DefaultMoveSpeed { get; private set; }
@@ -47,7 +47,7 @@ namespace Troops
         }
 
 
-        public void InitTroop(EntityDirection moveDir, FriendOrFoe friendOrFoe)
+        public void InitTroop(EntityDirection moveDir)
         {
             TroopVariable data = GameVariables.Instance.TroopVariables.GetVariable(TroopType);
 
@@ -63,9 +63,6 @@ namespace Troops
             _existenceCollider = transform.Find("ExistenceCollider").GetComponent<ExistenceCollider>();
 
             SetMoveDirection(moveDir);
-
-            FriendOrFoe = friendOrFoe;
-
 
             ChangeState(TroopState.Moving);
         }

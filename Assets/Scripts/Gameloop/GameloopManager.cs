@@ -8,6 +8,8 @@ using HUDCore;
 using Player.InputsController;
 using Buildings;
 using Territory;
+using System.Collections;
+using Utils.ArrayUtils;
 
 public enum PlayerControl { None, MainCharacter, Camera };
 public enum EntityDirection { Idle, Left, Right };
@@ -35,6 +37,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action OnMainCharacterDied;
     public event Action OnGameLoopStarted;
     public event Action OnLoseGame;
+
+    [SerializeField] private PseudoRandArray<Transform> _enemyTroopSpawnPoints;
+
 
 
     public Territory.TerritoryCore HoveredTerritory { get; private set; }
@@ -68,10 +73,27 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         CurrentSpawnedTroopsCount = 0;
         MaxSpawedTroopsCount = 10;
 
+        Invoke(nameof(StartSpawningEnemies), 3f);
+
         HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
         HUD.instance.OnUpdateToysCount.Invoke();
 
         OnGameLoopStarted?.Invoke();
+    }
+
+    private void StartSpawningEnemies()
+    {
+        StartCoroutine(nameof(SpawnEnemies));
+    }
+
+    private IEnumerator SpawnEnemies()
+    {
+        while (gameObject.activeSelf)
+        {
+            yield return new WaitForSeconds(3.0f);
+            var troop = SpawnManager.instance.SpawnTroop(TroopType.SharpShooter, _enemyTroopSpawnPoints.PickNext().position, FriendOrFoe.Foe);
+            troop.InitTroop(EntityDirection.Right);
+        }
     }
 
 
@@ -121,8 +143,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         HoldingToysCount -= spawnTroopAction.TroopCost;
         CurrentSpawnedTroopsCount++;
 
-        var troop = SpawnManager.instance.SpawnFriendlyTroop(spawnTroopAction.TroopType, spawnTroopAction.SpawnPoint);
-        troop.InitTroop(spawnTroopAction.MoveDirection, FriendOrFoe.Friend);
+        var troop = SpawnManager.instance.SpawnTroop(spawnTroopAction.TroopType, spawnTroopAction.SpawnPoint, FriendOrFoe.Friend);
+        troop.InitTroop(spawnTroopAction.MoveDirection);
 
         HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
         HUD.instance.OnUpdateToysCount.Invoke();
@@ -251,9 +273,4 @@ public struct TakeDamageAction
 {
     public float DamageAmount;
     public TroopType DamagedByTroop;
-    public TakeDamageAction(int damageAmount, TroopType damagedByTroop)
-    {
-        DamageAmount = damageAmount;
-        DamagedByTroop = damagedByTroop;
-    }
 }

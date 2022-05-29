@@ -9,6 +9,9 @@ namespace Utils.ArrayUtils
     public class PseudoRandArray<T>
     {
         [SerializeField] private T[] _array;
+
+        public int Length { get { return _array.Length; } }
+
         private int _index;
 
         public PseudoRandArray(T[] array)
@@ -17,7 +20,7 @@ namespace Utils.ArrayUtils
             _index = 0;
         }
 
-        public T Next()
+        public T PickNext()
         {
             if (_index >= _array.Length)
             {

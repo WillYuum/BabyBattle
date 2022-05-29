@@ -5,19 +5,22 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Card
+  - Clickable
+  - Troop
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Enemy
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Friendly
+  - Building
+  - Collectable
+  - ExistenceCollider
+  - Troop
   - 
   - 
   - 

@@ -1,67 +1,104 @@
 using System.Collections;
 using System.Collections.Generic;
+using Buildings;
+using DG.Tweening;
 using UnityEngine;
-
-
-
 namespace Troops
 {
-    public enum TroopType { BabyTroop, LargeBaby, MortarBaby };
-    public enum TroopState { Idle, Moving, Attacking, Dead };
+    using States;
 
-    public interface TroopActions
-    {
-        void Move(EntityDirection direction);
-        void TakeDamage(TroopTakeDamageAction action);
-        void Attack();
-        void Die();
-    }
+    public enum TroopType { SharpShooter, BabyTank, MortarBaby };
+    public enum TroopState { Idle, Moving, Attacking };
 
-    public struct TroopTakeDamageAction
+    public interface ITroopBuildingInteraction
     {
-        public float DamageAmount;
-        public TroopType DamagedByTroop;
-        public TroopTakeDamageAction(int damageAmount, TroopType damagedByTroop)
-        {
-            DamageAmount = damageAmount;
-            DamagedByTroop = damagedByTroop;
-        }
+        bool TryAccessBuilding(BuildingCore buildingCore);
+        void MoveToIdlePositionInBuilding(Transform target);
+        void MoveOutOfBuilding(EntityDirection direction);
     }
 
 
-    public class Troop : MonoBehaviour, TroopActions
+
+    public abstract class Troop : MonoBehaviour, IDamageable
     {
-        protected TroopType _troopType;
-        protected float _currentHealth { get; private set; }
-        protected float _attackDelay { get; private set; }
-        protected float _moveSpeed { get; private set; }
-        protected float _attackDamage { get; private set; }
-        protected Vector2 _moveDirection { get; private set; }
+        [field: SerializeField] public TroopType TroopType { get; private set; }
+        [field: SerializeField] public FriendOrFoe FriendOrFoe { get; private set; }
+        public float CurrentHealth { get; private set; }
+        public float AttackDelay { get; private set; }
+        public float DefaultMoveSpeed { get; private set; }
+        public float CurrentMoveSpeed { get; private set; }
+        public float AttackDamage { get; private set; }
+        public Vector2 MoveDirection { get; private set; }
+        public float attackDistance { get; private set; }
 
-        public virtual void Attack()
+        private Troop _troopBehind;
+
+
+        public TroopState TroopState { get; private set; }
+        private TroopStateCore _currentTroopState;
+
+        private ExistenceCollider _existenceCollider;
+
+        [SerializeField] private GameObject _characterVisual;
+
+        void Update()
         {
-            var damageAction = new TroopTakeDamageAction
-            {
-                DamageAmount = _attackDamage,
-                DamagedByTroop = _troopType,
-            };
-
-
-            //Raycast towards direction and check if target is hit
-
-            //If target is hit, get the target's IDamageable interface and call TakeDamage() and pass the  damage action
+            _currentTroopState.Execute();
         }
 
-        public virtual void Move(EntityDirection troopDirection)
-        {
 
+        public void InitTroop(EntityDirection moveDir)
+        {
+            TroopVariable data = GameVariables.Instance.TroopVariables.GetVariable(TroopType);
+
+            CurrentHealth = data.StartingHealth;
+            AttackDelay = data.AttackDelay;
+            DefaultMoveSpeed = data.MoveSpeed;
+            CurrentMoveSpeed = DefaultMoveSpeed;
+            AttackDamage = data.Damage;
+
+            attackDistance = 1f;
+
+            //NOTE: This is a temp solution, need to be changed for scale
+            _existenceCollider = transform.Find("ExistenceCollider").GetComponent<ExistenceCollider>();
+
+            SetMoveDirection(moveDir);
+
+            ChangeState(TroopState.Moving);
         }
 
-        public virtual void TakeDamage(TroopTakeDamageAction damageAction)
+
+        public abstract void Attack();
+        public void FindTargetToAttack()
         {
-            _currentHealth -= damageAction.DamageAmount;
-            if (_currentHealth <= 0)
+            var layer = (1 << LayerMask.NameToLayer("Troop") | (1 << LayerMask.NameToLayer("Building")));
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance, layer);
+            Collider2D collider = hit.collider;
+            if (collider != null)
             {
+                if (collider.TryGetComponent<Troop>(out Troop troop))
+                {
+                    if (troop.FriendOrFoe != FriendOrFoe)
+                    {
+                        ChangeState(TroopState.Attacking);
+                    }
+                }
+            }
+        }
+
+
+        public void Move()
+        {
+            transform.position += (Vector3)MoveDirection * CurrentMoveSpeed * Time.deltaTime;
+        }
+
+        public virtual void TakeDamage(TakeDamageAction damageAction)
+        {
+
+            CurrentHealth -= damageAction.DamageAmount;
+            if (CurrentHealth <= 0)
+            {
+                UpdateMoveSpeedOnTroopBehind();
                 Die();
             }
         }
@@ -70,6 +107,51 @@ namespace Troops
         public virtual void Die()
         {
             Destroy(gameObject, 1.0f);
+        }
+
+        protected void SetMoveDirection(EntityDirection direction)
+        {
+            _characterVisual.transform.localScale = new Vector3(direction == EntityDirection.Left ? -1.0f : 1.0f, 1.0f, 1.0f);
+            _existenceCollider.SwitchDirection(direction);
+            MoveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
+        }
+
+
+
+        protected void ChangeState(TroopState newState)
+        {
+            switch (newState)
+            {
+                case TroopState.Idle:
+                    _currentTroopState = new TroopIdleState();
+                    break;
+                case TroopState.Moving:
+                    _currentTroopState = new TroopMoveState();
+                    break;
+                case TroopState.Attacking:
+                    _currentTroopState = new TroopAttackState();
+                    break;
+                default:
+                    _currentTroopState = new TroopIdleState();
+                    Debug.Log("Invalid Troop State");
+                    break;
+            }
+
+            TroopState = newState;
+            _currentTroopState.ChangeState(_currentTroopState, this);
+        }
+
+        public void SetCurrentMoveSpeed(float speed)
+        {
+            CurrentMoveSpeed = speed;
+        }
+
+        protected void UpdateMoveSpeedOnTroopBehind()
+        {
+            if (_troopBehind != null)
+            {
+                _troopBehind.SetCurrentMoveSpeed(_troopBehind.DefaultMoveSpeed);
+            }
         }
     }
 }

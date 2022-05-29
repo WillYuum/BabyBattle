@@ -8,10 +8,15 @@ namespace HUDCore.Screens
         [SerializeField] private HealthBarUI _playerHealthBar;
 
         [SerializeField] private TextMeshProUGUI tabKeyText;
+        [SerializeField] private TextMeshProUGUI toysCountText;
+
+        [SerializeField] private TextMeshProUGUI troopsSpawnCountText;
 
         void Awake()
         {
             InitGameScreen();
+            HUD.instance.OnUpdateToysCount += UpdateToysCout;
+            HUD.instance.OnUpdateTroopsSpawnCount += UpdateTroopSpawnCount;
         }
 
         public void InitGameScreen()
@@ -38,6 +43,24 @@ namespace HUDCore.Screens
             {
                 tabKeyText.text = "Switch to:\nCamera";
             }
+        }
+
+
+        private void UpdateToysCout()
+        {
+            int usedToys = GameloopManager.instance.HoldingToysCount;
+            int maxToys = GameloopManager.instance.MaxHoldingToysCount;
+
+            toysCountText.text = $"{usedToys}/{maxToys}";
+        }
+
+
+        public void UpdateTroopSpawnCount()
+        {
+            int spawnedTroops = GameloopManager.instance.CurrentSpawnedTroopsCount;
+            int maxTroops = GameloopManager.instance.MaxSpawedTroopsCount;
+
+            troopsSpawnCountText.text = $"{spawnedTroops}/{maxTroops}";
         }
 
     }

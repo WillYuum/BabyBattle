@@ -5,7 +5,7 @@ using Utils.GenericSingletons;
 using Troops;
 using HUDCore;
 
-public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
+public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, IDamageable/* , TroopActions */
 {
     [SerializeField] private float _moveSpeed = 3.0f;
     private EntityDirection _moveDirection = EntityDirection.Right;
@@ -26,7 +26,7 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var damageAction = new TroopTakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.LargeBaby };
+            var damageAction = new TakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.BabyTank };
             TakeDamage(damageAction);
         }
     }
@@ -53,11 +53,11 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
     {
         if (_moveDirection == EntityDirection.Left)
         {
-            _characterVisual.transform.localScale = -Vector3.one;
+            _characterVisual.transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
         }
         else
         {
-            _characterVisual.transform.localScale = Vector3.one;
+            _characterVisual.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         }
 
 
@@ -70,7 +70,7 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
         transform.position += move * Time.deltaTime;
     }
 
-    public void TakeDamage(TroopTakeDamageAction action)
+    public void TakeDamage(TakeDamageAction action)
     {
         _currentHealth -= action.DamageAmount;
         HUD.instance.OnUpdatePlayerHealth.Invoke(_currentHealth / 100.0f);
@@ -81,22 +81,30 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, TroopActions
         }
     }
 
-    public void Attack()
+    // public void Attack()
+    // {
+    //     float moveDir = _moveDirection == EntityDirection.Left ? -1.0f : 1.0f;
+
+    //     Vector3 shootDir = new Vector3(moveDir, 0, 0);
+
+    //     RaycastHit2D hit2D = Physics2D.Raycast(transform.position, shootDir, 5.0f, LayerMask.GetMask("Enemy"));
+
+    //     if (hit2D.collider == null) return;
+
+    //     if (hit2D.collider.TryGetComponent<Troop>(out Troop enemy))
+    //     {
+    //         //FIXME: Damaged by troop should be by player, but do I need to pass the main character troop type?
+    //         var damageAction = new TakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.LargeBaby };
+
+    //         enemy.TakeDamage(damageAction);
+    //     }
+    // }
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        float moveDir = _moveDirection == EntityDirection.Left ? -1.0f : 1.0f;
-
-        Vector3 shootDir = new Vector3(moveDir, 0, 0);
-
-        RaycastHit2D hit2D = Physics2D.Raycast(transform.position, shootDir, 5.0f, LayerMask.GetMask("Enemy"));
-
-        if (hit2D.collider == null) return;
-
-        if (hit2D.collider.TryGetComponent<Troop>(out Troop enemy))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Collectable"))
         {
-            //FIXME: Damaged by troop should be by player, but do I need to pass the main character troop type?
-            var damageAction = new TroopTakeDamageAction { DamageAmount = 10, DamagedByTroop = TroopType.LargeBaby };
-
-            enemy.TakeDamage(damageAction);
+            GameloopManager.instance.CollectToys(new CollectToysEvent { ToysCount = 1, CollectedToy = other.gameObject });
         }
     }
 

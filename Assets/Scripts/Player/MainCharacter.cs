@@ -66,8 +66,14 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, IDamageable/
 
         float moveDir = direction == EntityDirection.Left ? -1.0f : 1.0f;
 
+        float maxXPos = WorldManager.instance.WorldBorders.MaxRight.position.x;
+        float minXPos = WorldManager.instance.WorldBorders.MaxLeft.position.x;
+
         Vector3 move = new Vector3(moveDir * _moveSpeed, 0, 0);
-        transform.position += move * Time.deltaTime;
+        Vector3 newPos = transform.position + move * Time.deltaTime;
+        newPos.x = Mathf.Clamp(newPos.x, minXPos + 0.1f, maxXPos - 0.1f);
+
+        transform.position = newPos;
     }
 
     public void TakeDamage(TakeDamageAction action)

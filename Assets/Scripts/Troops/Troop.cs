@@ -93,9 +93,11 @@ namespace Troops
 
             if (collider.TryGetComponent<Troop>(out Troop troop))
             {
-                print(FriendOrFoe + "Troop found " + troop.FriendOrFoe);
                 if (troop.FriendOrFoe != FriendOrFoe)
                 {
+                    if (TroopState == TroopState.Attacking) return;
+
+                    print(FriendOrFoe + "Troop found " + troop.FriendOrFoe);
                     ChangeState(TroopState.Attacking);
                 }
             }

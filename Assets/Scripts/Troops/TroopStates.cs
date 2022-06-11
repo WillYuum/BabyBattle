@@ -19,6 +19,9 @@ namespace Troops.States
 
         public override void Execute()
         {
+            _troop.FindTargetToAttack();
+
+
             _delayTillHit -= Time.deltaTime;
             if (_delayTillHit <= 0)
             {

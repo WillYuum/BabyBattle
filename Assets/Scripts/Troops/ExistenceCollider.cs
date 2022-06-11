@@ -71,8 +71,8 @@ public class ExistenceCollider : MonoBehaviour
         var position = transform.localPosition;
         if (direction == EntityDirection.Left)
         {
-            position.x = -position.x;
-            position.y = -position.y;
+            position.x = -Math.Abs(position.x);
+            position.y = -Math.Abs(position.y);
             transform.localPosition = position;
         }
         else

@@ -6,7 +6,8 @@ namespace Troops.TroopClasses
     {
         public override void Attack()
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance);
+            var layer = (1 << LayerMask.NameToLayer("Troop") | (1 << LayerMask.NameToLayer("Building")));
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance, layer);
 
             if (hit.collider)
             {
@@ -16,7 +17,8 @@ namespace Troops.TroopClasses
                     DamagedByTroop = TroopType,
                 };
 
-                hit.collider.GetComponent<IDamageable>().TakeDamage(damageAction);
+                IDamageable damage = hit.collider.GetComponent<Troop>();
+                damage.TakeDamage(damageAction);
             }
         }
     }

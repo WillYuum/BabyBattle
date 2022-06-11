@@ -10,6 +10,7 @@ namespace Troops
     public enum TroopType { SharpShooter, BabyTank, MortarBaby };
     public enum TroopState { Idle, Moving, Attacking };
 
+
     public interface ITroopBuildingInteraction
     {
         bool TryAccessBuilding(BuildingCore buildingCore);
@@ -43,7 +44,7 @@ namespace Troops
 
         void Update()
         {
-            _currentTroopState.Execute();
+            _currentTroopState?.Execute();
         }
 
 
@@ -74,14 +75,17 @@ namespace Troops
             var layer = (1 << LayerMask.NameToLayer("Troop") | (1 << LayerMask.NameToLayer("Building")));
             RaycastHit2D hit = Physics2D.Raycast(transform.position, MoveDirection, attackDistance, layer);
             Collider2D collider = hit.collider;
-            if (collider != null)
+
+            Debug.DrawLine(transform.position, transform.position + (Vector3)MoveDirection * attackDistance, Color.red);
+
+            if (collider == null || collider.gameObject == gameObject) return;
+
+            if (collider.TryGetComponent<Troop>(out Troop troop))
             {
-                if (collider.TryGetComponent<Troop>(out Troop troop))
+                print(FriendOrFoe + "Troop found " + troop.FriendOrFoe);
+                if (troop.FriendOrFoe != FriendOrFoe)
                 {
-                    if (troop.FriendOrFoe != FriendOrFoe)
-                    {
-                        ChangeState(TroopState.Attacking);
-                    }
+                    ChangeState(TroopState.Attacking);
                 }
             }
         }
@@ -106,14 +110,23 @@ namespace Troops
 
         public virtual void Die()
         {
-            Destroy(gameObject, 1.0f);
+            print("Troop died " + gameObject.name);
+            Destroy(gameObject, 0.0f);
         }
 
         protected void SetMoveDirection(EntityDirection direction)
         {
-            _characterVisual.transform.localScale = new Vector3(direction == EntityDirection.Left ? -1.0f : 1.0f, 1.0f, 1.0f);
+            (Vector2 moveDir, Vector3 scale) = direction switch
+            {
+                EntityDirection.Left => (Vector2.left, new Vector3(-1, 1, 1)),
+                EntityDirection.Right => (Vector2.right, new Vector3(1, 1, 1)),
+                EntityDirection.Idle => (MoveDirection, new Vector3(MoveDirection.x, MoveDirection.y, 1)),
+                _ => throw new System.Exception("Invalid direction: " + direction),
+            };
+
+            _characterVisual.transform.localScale = scale;
             _existenceCollider.SwitchDirection(direction);
-            MoveDirection = direction == EntityDirection.Left ? Vector2.left : Vector2.right;
+            MoveDirection = moveDir;
         }
 
 
@@ -153,5 +166,45 @@ namespace Troops
                 _troopBehind.SetCurrentMoveSpeed(_troopBehind.DefaultMoveSpeed);
             }
         }
+
+
+#if UNITY_EDITOR
+
+        [ContextMenu("Force Init State")]
+        private void ForceInitState()
+        {
+            InitTroop(EntityDirection.Left);
+        }
+
+        [ContextMenu("Set dir to left")]
+        private void SetDirToLeft()
+        {
+            SetMoveDirection(EntityDirection.Left);
+        }
+
+        [ContextMenu("Set dir to right")]
+        private void SetDirToRight()
+        {
+            SetMoveDirection(EntityDirection.Right);
+        }
+
+        [ContextMenu("Set To Attack State")]
+        private void SetToAttackState()
+        {
+            ChangeState(TroopState.Attacking);
+        }
+
+        [ContextMenu("Set To Idle State")]
+        private void SetToIdleState()
+        {
+            ChangeState(TroopState.Idle);
+        }
+
+        [ContextMenu("Set To Moving State")]
+        private void SetToMovingState()
+        {
+            ChangeState(TroopState.Moving);
+        }
+#endif
     }
 }

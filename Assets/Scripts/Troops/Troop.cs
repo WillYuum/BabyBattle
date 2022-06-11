@@ -39,8 +39,19 @@ namespace Troops
         private TroopStateCore _currentTroopState;
 
         private ExistenceCollider _existenceCollider;
+        public Animator Animator { get; private set; }
 
         [SerializeField] private GameObject _characterVisual;
+
+
+        private void Awake()
+        {
+            Animator = gameObject.GetComponent<Animator>();
+
+#if UNITY_EDITOR
+            if (Animator == null) Debug.LogError("Animator is null");
+#endif
+        }
 
         void Update()
         {

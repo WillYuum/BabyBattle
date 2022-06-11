@@ -10,6 +10,7 @@ namespace Troops.States
         public override void EnterState()
         {
             _delayTillHit = _troop.AttackDelay;
+            _troop.Animator.Play("Attack");
         }
 
         public override void ExitState()
@@ -18,6 +19,9 @@ namespace Troops.States
 
         public override void Execute()
         {
+            _troop.FindTargetToAttack();
+
+
             _delayTillHit -= Time.deltaTime;
             if (_delayTillHit <= 0)
             {
@@ -32,6 +36,7 @@ namespace Troops.States
         public override void EnterState()
         {
             //Play running animation
+            _troop.Animator.Play("Walk");
         }
 
         public override void ExitState()
@@ -51,7 +56,7 @@ namespace Troops.States
         public override void EnterState()
         {
             //Play idle animation
-
+            _troop.Animator.Play("Idle");
         }
 
         public override void ExitState()

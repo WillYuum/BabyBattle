@@ -121,15 +121,15 @@ namespace Territory
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (UtilMethods.CollidedWithPlayer(other))
-            {
-                //show UI
-                UI.SetActive(true);
+            // if (UtilMethods.CollidedWithPlayer(other))
+            // {
+            //     //show UI
+            //     UI.SetActive(true);
 
-                GameloopManager.instance.UpdateHoveredTerritoryState(this);
+            // GameloopManager.instance.UpdateHoveredTerritoryState(this);
 
-                CollectNewToys();
-            }
+            //     CollectNewToys();
+            // }
         }
 
         private void CollectNewToys()
@@ -145,13 +145,13 @@ namespace Territory
 
         void OnTriggerExit2D(Collider2D other)
         {
-            if (UtilMethods.CollidedWithPlayer(other))
-            {
-                //hide UI
-                UI.SetActive(false);
+            // if (UtilMethods.CollidedWithPlayer(other))
+            // {
+            //     //hide UI
+            //     UI.SetActive(false);
 
-                GameloopManager.instance.UpdateHoveredTerritoryState(null);
-            }
+            //     GameloopManager.instance.UpdateHoveredTerritoryState(null);
+            // }
         }
     }
 

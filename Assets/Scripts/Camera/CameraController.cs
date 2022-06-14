@@ -7,9 +7,6 @@ namespace CameraControllerCore
 {
     public class CameraController : MonoBehaviour
     {
-        private CameraFollowPlayerState _followPlayerCameraState = new CameraFollowPlayerState();
-        private CameraStateCore _currentCameraState;
-
 
         private Vector3 _cameraMinPosition;
         private Vector3 _cameraMaxPosition;
@@ -17,19 +14,28 @@ namespace CameraControllerCore
 
         void Awake()
         {
-            SetCameraPositionBound();
-
-            _currentCameraState = _followPlayerCameraState;
-            _followPlayerCameraState.Init(this);
+            CalculateCameraPositionBound();
         }
 
-        void Update()
+
+        public void MoveCamera(EntityDirection direction)
         {
-            _currentCameraState.Execute();
+            Vector3 newCamPos = transform.position;
+            switch (direction)
+            {
+                case EntityDirection.Left:
+                    newCamPos += new Vector3(-1, 0, 0);
+                    break;
+                case EntityDirection.Right:
+                    newCamPos += new Vector3(1, 0, 0);
+                    break;
+            }
+
+            newCamPos.x = Mathf.Clamp(newCamPos.x, _cameraMinPosition.x, _cameraMaxPosition.x);
+            transform.position = newCamPos;
         }
 
-
-        private void SetCameraPositionBound()
+        private void CalculateCameraPositionBound()
         {
             Vector2 cameraCurrentPosition = Camera.main.transform.position;
             float cameraHalfWidthLength = Camera.main.ViewportToWorldPoint(new Vector2(1.0f, 0f)).x;
@@ -50,17 +56,5 @@ namespace CameraControllerCore
             addOffsetToMinMaxPosition(ref _cameraMaxPosition, -cameraHalfWidthLength);
         }
 
-
-
-        public void CameraFollowPlayer()
-        {
-            Vector3 newCameraPos = MainCharacter.instance.GetPos;
-
-            newCameraPos.x = Mathf.Clamp(newCameraPos.x, _cameraMinPosition.x, _cameraMaxPosition.x);
-            newCameraPos.y = transform.position.y;
-            newCameraPos.z = transform.position.z;
-
-            transform.position = newCameraPos;
-        }
     }
 }

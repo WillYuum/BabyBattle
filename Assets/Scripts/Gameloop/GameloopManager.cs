@@ -34,7 +34,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
 
 
-    public event Action OnMainCharacterDied;
     public event Action OnGameLoopStarted;
     public event Action OnLoseGame;
 
@@ -119,15 +118,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
-    public void MainCharacterDied()
-    {
-        OnMainCharacterDied?.Invoke();
-        OnMainCharacterDied = null;
-
-        OnLoseGame?.Invoke();
-        OnLoseGame = null;
-    }
-
 
     public void InvokeSpawnFriendlyTroop(SpawnTroopAction spawnTroopAction)
     {
@@ -211,20 +201,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         HoveredTerritory.TryTakeControl(controlledBy);
 
-    }
-
-    public void UpdateHoveredTerritoryState(TerritoryCore territory)
-    {
-        HoveredTerritory = territory;
-
-        if (territory == null)
-        {
-            _playerInputActions.SwitchToState(PlayerInputState.Normal);
-        }
-        else
-        {
-            _playerInputActions.SwitchToState(PlayerInputState.InTerritoryAreaInputs);
-        }
     }
 
     public void IncreaseMaxAmountOfTroops(int amount)

@@ -2,13 +2,27 @@ using UnityEngine;
 
 namespace CameraControllerCore.States
 {
-    public class CameraFollowPlayerState : CameraStateCore
+    // public class CameraFollowPlayerState : CameraStateCore
+    // {
+    //     public override void Execute()
+    //     {
+
+    //     }
+    // }
+
+    public class NormalCameraControlState : CameraStateCore
     {
         public override void Execute()
         {
-            base.Execute();
 
-            _cameraController.CameraFollowPlayer();
+        }
+    }
+
+    public class NoCameraControlState : CameraStateCore
+    {
+        public override void Execute()
+        {
+
         }
     }
 
@@ -22,9 +36,6 @@ namespace CameraControllerCore.States
             _cameraController = cameraController;
         }
 
-        public virtual void Execute()
-        {
-
-        }
+        public abstract void Execute();
     }
 }

@@ -5,8 +5,6 @@ namespace HUDCore.Screens
 {
     public class GameScreen : MonoBehaviour
     {
-        [SerializeField] private HealthBarUI _playerHealthBar;
-
         [SerializeField] private TextMeshProUGUI tabKeyText;
         [SerializeField] private TextMeshProUGUI toysCountText;
 
@@ -21,16 +19,7 @@ namespace HUDCore.Screens
 
         public void InitGameScreen()
         {
-            HUD.instance.OnUpdatePlayerHealth += UpdatePlayerHealth;
-
             GameloopManager.instance.OnSwitchPlayerControl += SwitchUIForPlayerControl;
-
-            _playerHealthBar.Init();
-        }
-
-        private void UpdatePlayerHealth(float health)
-        {
-            _playerHealthBar.SetHealth(health);
         }
 
         private void SwitchUIForPlayerControl(PlayerControl playerControl)

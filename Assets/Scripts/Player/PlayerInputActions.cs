@@ -1,31 +1,27 @@
 using UnityEngine;
 using Player.Controls;
 
+
+public enum PlayerControlState { Normal, Locked }
 namespace Player.InputsController
 {
-    public enum PlayerInputState { Normal, InTerritoryAreaInputs, };
+    public enum PlayerInputState { Normal, Locked };
     public class PlayerInputActions : MonoBehaviour
     {
 
-        private PlayerIdleState _playerIdleState = new PlayerIdleState();
-        private MainCharacterIdleState _mainCharacterIdleState = new MainCharacterIdleState();
-        private InTerritoryAreaInputs _inTerritoryAreaInputs = new InTerritoryAreaInputs();
-
+        private NormalPlayerInput _normalPlayerInput = new NormalPlayerInput();
+        private LockedPlayerInput _lockedPlayerInput = new LockedPlayerInput();
         private PlayerInputStateCore _currentPlayerInput;
 
-        private GameObject _spawnedTroop;
-        public float MinDistanceToSpawnTroop = 1f;
-        public Vector3 StartingMousePos { get; private set; }
-
+        public CameraControllerCore.CameraController CameraController { get; private set; }
 
         void Awake()
         {
-            _playerIdleState.Init(this);
-            _mainCharacterIdleState.Init(this);
-            _inTerritoryAreaInputs.Init(this);
+            _normalPlayerInput.Init(this);
+            _lockedPlayerInput.Init(this);
 
-
-            SwitchToState(PlayerInputState.Normal);
+            SwitchToState(PlayerControlState.Normal);
+            CameraController = Camera.main.GetComponent<CameraControllerCore.CameraController>();
             // GameloopManager.instance.OnSwitchPlayerControl += OnPlayerControlSwitch;
         }
 
@@ -35,18 +31,7 @@ namespace Player.InputsController
         }
 
 
-        public void HandlePlayerMove(EntityDirection direction)
-        {
-            MainCharacter.instance.Move(direction);
-        }
-
-
-        public void EnterIdleStateWhileTryingToSpawnTroop()
-        {
-            _currentPlayerInput = _playerIdleState;
-        }
-
-        public void OnClickInIdle()
+        public void InvokeClickScreen()
         {
             var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 0f, LayerMask.GetMask("Building"));
             if (hit.collider)
@@ -69,16 +54,21 @@ namespace Player.InputsController
             // }
         }
 
+        public void InvokeMoveCamera(EntityDirection direction)
+        {
+            CameraController.MoveCamera(direction);
+        }
 
-        public void SwitchToState(PlayerInputState newInputState)
+
+        public void SwitchToState(PlayerControlState newInputState)
         {
             switch (newInputState)
             {
-                case PlayerInputState.Normal:
-                    _currentPlayerInput = _mainCharacterIdleState;
+                case PlayerControlState.Normal:
+                    _currentPlayerInput = _normalPlayerInput;
                     break;
-                case PlayerInputState.InTerritoryAreaInputs:
-                    _currentPlayerInput = _inTerritoryAreaInputs;
+                case PlayerControlState.Locked:
+                    _currentPlayerInput = _lockedPlayerInput;
                     break;
                 default:
                     Debug.LogError("Unknown player input state");

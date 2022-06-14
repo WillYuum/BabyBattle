@@ -3,62 +3,35 @@ using Player.InputsController;
 
 namespace Player.Controls
 {
-    public class PlayerIdleState : PlayerInputStateCore
+
+    public class NormalPlayerInput : PlayerInputStateCore
     {
         public override void CheckInput()
         {
-            base.CheckInput();
-
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
-                _playerActions.OnClickInIdle();
+                _playerActions.InvokeMoveCamera(EntityDirection.Left);
             }
-        }
-    }
-
-    public class MainCharacterIdleState : PlayerInputStateCore
-    {
-        public override void CheckInput()
-        {
-            base.CheckInput();
-
-
-            if (Input.GetKey(KeyCode.A))
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
-                _playerActions.HandlePlayerMove(EntityDirection.Left);
+                _playerActions.InvokeMoveCamera(EntityDirection.Right);
             }
-            else if (Input.GetKey(KeyCode.D))
+
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                _playerActions.HandlePlayerMove(EntityDirection.Right);
+                _playerActions.InvokeClickScreen();
             }
         }
     }
 
 
-    public class InTerritoryAreaInputs : PlayerInputStateCore
+    public class LockedPlayerInput : PlayerInputStateCore
     {
         public override void CheckInput()
         {
-            base.CheckInput();
 
-            if (Input.GetKey(KeyCode.E))
-            {
-                // _playerActions.EnterIdleStateWhileTryingToSpawnTroop();
-                GameloopManager.instance.TryTakeOverTerritory(Territory.ControlledBy.Friend);
-            }
-
-
-            if (Input.GetKey(KeyCode.A))
-            {
-                _playerActions.HandlePlayerMove(EntityDirection.Left);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                _playerActions.HandlePlayerMove(EntityDirection.Right);
-            }
         }
     }
-
 
 
     public abstract class PlayerInputStateCore

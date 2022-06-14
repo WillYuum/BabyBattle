@@ -19,7 +19,7 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, IDamageable/
     private void Awake()
     {
         _currentHealth = 100.0f;
-        HUD.instance.OnUpdatePlayerHealth.Invoke(_currentHealth / 100.0f);
+        // HUD.instance.OnUpdatePlayerHealth.Invoke(_currentHealth / 100.0f);
     }
 
     private void Update()
@@ -79,7 +79,7 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, IDamageable/
     public void TakeDamage(TakeDamageAction action)
     {
         _currentHealth -= action.DamageAmount;
-        HUD.instance.OnUpdatePlayerHealth.Invoke(_currentHealth / 100.0f);
+        // HUD.instance.OnUpdatePlayerHealth.Invoke(_currentHealth / 100.0f);
 
         if (_currentHealth <= 0)
         {
@@ -116,6 +116,6 @@ public class MainCharacter : MonoBehaviourSingleton<MainCharacter>, IDamageable/
 
     public void Die()
     {
-        GameloopManager.instance.MainCharacterDied();
+        // GameloopManager.instance.MainCharacterDied();
     }
 }

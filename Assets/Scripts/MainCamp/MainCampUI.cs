@@ -13,6 +13,7 @@ public class MainCampUI : MonoBehaviour
     [SerializeField] private HealthBarUI _healthBarUI;
     [SerializeField] private TroopCard[] _troopCardPrefab;
 
+    [SerializeField] private GameObject[] arrows;
 
     public struct InitConfig
     {
@@ -45,5 +46,20 @@ public class MainCampUI : MonoBehaviour
     private void AddClickEventToTroopCard(Action<Troops.TroopType> action)
     {
         _troopCardPrefab.ToList().ForEach(x => x.GetComponent<Button>().onClick.AddListener(() => action(x.TroopType)));
+    }
+
+
+    public void RenderDirection(EntityDirection direction)
+    {
+        if (direction == EntityDirection.Left)
+        {
+            arrows[0].SetActive(true);
+            arrows[1].SetActive(false);
+        }
+        else
+        {
+            arrows[0].SetActive(false);
+            arrows[1].SetActive(true);
+        }
     }
 }

@@ -69,7 +69,7 @@ namespace Buildings.TroopCampComponent
         {
             base.OnTroopInteractWithBuilding(troop);
 
-            if (troop.TryAccessBuilding(this) && _troops.Count < _idlePositions.Length)
+            if (_troops.Count < _idlePositions.Length)
             {
                 _troops.Add(troop);
                 InvokeTroopIdleInBuilding(troop);

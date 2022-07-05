@@ -67,7 +67,7 @@ namespace Buildings.DefensiveWallComponent
         {
             base.OnTroopInteractWithBuilding(troop);
 
-            if (troop.TryAccessBuilding(this) && _troops.Count < _idleTroopsPositions.Length)
+            if (_troops.Count < _idleTroopsPositions.Length)
             {
                 _troops.Add(troop);
                 InvokeTroopIdleInBuilding(troop);

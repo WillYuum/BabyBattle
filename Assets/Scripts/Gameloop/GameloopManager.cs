@@ -72,7 +72,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         CurrentSpawnedTroopsCount = 0;
         MaxSpawedTroopsCount = 10;
 
-        Invoke(nameof(StartSpawningEnemies), 3f);
+        Invoke(nameof(StartSpawningEnemies), 1f);
 
         HUD.instance.OnUpdateTroopsSpawnCount.Invoke();
         HUD.instance.OnUpdateToysCount.Invoke();
@@ -80,12 +80,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         OnGameLoopStarted?.Invoke();
     }
 
+
+    [SerializeField] private BigEnemyCamp _bigEnemyCamp;
     private void StartSpawningEnemies()
     {
-        StartCoroutine(nameof(SpawnEnemies));
+        //TODO: Spawn enemies within intervals
+        // StartCoroutine(nameof(SpawnEnemiesRandomly));
+
+        //TODO: Spawn enemies and make them enter the bigEnemyCamp for the big attack
+        StartCoroutine(AddEnemyTroopsToBigCamp(_bigEnemyCamp, 5, 1.0f));
     }
 
-    private IEnumerator SpawnEnemies()
+    private IEnumerator SpawnEnemiesRandomly()
     {
         while (gameObject.activeSelf)
         {
@@ -93,6 +99,37 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             var troop = SpawnManager.instance.SpawnTroop(TroopType.SharpShooter, _enemyTroopSpawnPoints.PickNext().position, FriendOrFoe.Foe);
             troop.InitTroop(EntityDirection.Right);
         }
+    }
+
+    private IEnumerator AddEnemyTroopsToBigCamp(BigEnemyCamp enemyCamp, int troopsCount, float interval)
+    {
+        int troopsAdded = 0;
+        while (gameObject.activeSelf)
+        {
+            yield return new WaitForSeconds(interval);
+
+            Vector3 spawnPos = enemyCamp.transform.position;
+
+            var troop = SpawnManager.instance.SpawnTroop(TroopType.SharpShooter, spawnPos, FriendOrFoe.Foe);
+            troop.InitTroop(enemyCamp.AttackDirection);
+
+            enemyCamp.GarrisonTroops(troop);
+            troop.GetComponent<ITroopBuildingInteraction>().MoveToIdlePositionInBuilding(enemyCamp.transform);
+
+
+            troopsAdded++;
+            if (troopsAdded >= troopsCount)
+            {
+                StopCoroutine(nameof(AddEnemyTroopsToBigCamp));
+                SendWaveOfEnemiesToAttack(enemyCamp);
+                break;
+            }
+        }
+    }
+
+    private void SendWaveOfEnemiesToAttack(BigEnemyCamp camp)
+    {
+        camp.UnGarrisonTroops();
     }
 
 

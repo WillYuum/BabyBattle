@@ -33,25 +33,18 @@ namespace Player.InputsController
 
         public void InvokeClickScreen()
         {
-            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, 0f, LayerMask.GetMask("Building"));
-            if (hit.collider)
+            //Check if clicked on maincamp
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+            Debug.DrawRay(mousePos, Vector2.zero, Color.green, 5f);
+            var hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+            if (hit.collider != null)
             {
-                if (hit.collider.TryGetComponent<MainCamp>(out var mainCamp))
+                if (hit.collider.gameObject.tag == "MainCamp")
                 {
-                    //Switch direction of spawning troops
+                    //Switch main camp attack position
                 }
-
-                return;
             }
-
-            // if (EventSystem.current.currentSelectedGameObject.CompareTag("Card"))
-            // {
-            //     var card = EventSystem.current.currentSelectedGameObject.GetComponent<InteractableUI.TroopCard>();
-
-
-            //     _spawnedTroop = SpawnManager.instance.SpawnFriendlyTroop(card.TroopType).gameObject;
-            //     StartingMousePos = Input.mousePosition;
-            // }
         }
 
         public void InvokeMoveCamera(EntityDirection direction)

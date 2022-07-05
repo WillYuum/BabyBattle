@@ -732,6 +732,9 @@ MonoBehaviour:
   _troopCardPrefab:
   - {fileID: 1049709255978911397}
   - {fileID: 3514266653084999695}
+  arrows:
+  - {fileID: 4192342168548178794}
+  - {fileID: 4192342168864056636}
 --- !u!1 &4192342170410441156
 GameObject:
   m_ObjectHideFlags: 0

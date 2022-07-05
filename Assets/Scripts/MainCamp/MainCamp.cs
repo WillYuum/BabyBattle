@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public class MainCamp : MonoBehaviour, IDamageable
 {
     [Header("Variables")]
@@ -14,7 +13,7 @@ public class MainCamp : MonoBehaviour, IDamageable
     {
         _mainCampUI.InitUI(new MainCampUI.InitConfig
         {
-            active = false,
+            active = true,
             startingHealth = _currentHealth / 100f,
             onClickTroopCard = OnClickTroopCard
         });
@@ -44,27 +43,23 @@ public class MainCamp : MonoBehaviour, IDamageable
         });
     }
 
-
-    private void OnTriggerEnter2D(Collider2D other)
+    public void SwitchSpawnDirection()
     {
-        if (CheckIfMainCharater(other))
+        if (_spawnDirection == EntityDirection.Left)
         {
-            _mainCampUI.ToggleUI(true);
+            _spawnDirection = EntityDirection.Right;
         }
-    }
-
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (CheckIfMainCharater(other))
+        else
         {
-            _mainCampUI.ToggleUI(false);
+            _spawnDirection = EntityDirection.Left;
         }
+
+        RenderSwitchDirection();
     }
 
-    private bool CheckIfMainCharater(Collider2D other)
+
+    private void RenderSwitchDirection()
     {
-        return other.CompareTag("Player");
-    }
 
+    }
 }

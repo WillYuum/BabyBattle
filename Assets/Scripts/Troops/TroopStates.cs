@@ -69,6 +69,33 @@ namespace Troops.States
         }
     }
 
+    //God means me :)
+    public class ControlledByGodState : TroopStateCore
+    {
+        public override void EnterState()
+        {
+            switch (_troop.TroopState)
+            {
+                case TroopState.Idle:
+                    _troop.Animator.Play("Idle");
+                    break;
+                case TroopState.Moving:
+                    _troop.Animator.Play("Walk");
+                    break;
+                case TroopState.Attacking:
+                    _troop.Animator.Play("Attack");
+                    break;
+            }
+        }
+
+        public override void ExitState()
+        {
+        }
+
+        public override void Execute()
+        {
+        }
+    }
 
     public abstract class TroopStateCore
     {

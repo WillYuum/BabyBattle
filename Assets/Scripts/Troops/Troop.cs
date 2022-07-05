@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using Buildings;
 using DG.Tweening;
 using UnityEngine;
+
+public interface IGarrisonable
+{
+    void GarrisonTroops(Troops.Troop troop);
+    void UnGarrisonTroops();
+}
+
+
+
+
 namespace Troops
 {
     using States;
@@ -13,14 +23,13 @@ namespace Troops
 
     public interface ITroopBuildingInteraction
     {
-        bool TryAccessBuilding(BuildingCore buildingCore);
         void MoveToIdlePositionInBuilding(Transform target);
         void MoveOutOfBuilding(EntityDirection direction);
     }
 
 
 
-    public abstract class Troop : MonoBehaviour, IDamageable
+    public abstract class Troop : MonoBehaviour, IDamageable, ITroopBuildingInteraction
     {
         [field: SerializeField] public TroopType TroopType { get; private set; }
         [field: SerializeField] public FriendOrFoe FriendOrFoe { get; private set; }
@@ -167,6 +176,16 @@ namespace Troops
             _currentTroopState.ChangeState(_currentTroopState, this);
         }
 
+        private void GetControlledByGod(TroopState ControlledState, EntityDirection direction)
+        {
+            _currentTroopState = new ControlledByGodState();
+            TroopState = ControlledState;
+            SetMoveDirection(direction);
+
+            //Change state should happen in the end
+            _currentTroopState.ChangeState(_currentTroopState, this);
+        }
+
         public void SetCurrentMoveSpeed(float speed)
         {
             CurrentMoveSpeed = speed;
@@ -174,13 +193,30 @@ namespace Troops
 
         protected void UpdateMoveSpeedOnTroopBehind()
         {
-            if (_troopBehind != null)
+            // if (_troopBehind != null)
+            // {
+            //     _troopBehind.SetCurrentMoveSpeed(_troopBehind.DefaultMoveSpeed);
+            // }
+        }
+
+        public void MoveToIdlePositionInBuilding(Transform target)
+        {
+            var direction = target.position.x > 0 ? EntityDirection.Right : EntityDirection.Left;
+            GetControlledByGod(TroopState.Moving, direction);
+            transform.DOMove(target.position, 0.5f).OnComplete(() =>
             {
-                _troopBehind.SetCurrentMoveSpeed(_troopBehind.DefaultMoveSpeed);
-            }
+                ChangeState(TroopState.Idle);
+            });
+        }
+
+        public void MoveOutOfBuilding(EntityDirection direction)
+        {
+            SetMoveDirection(direction);
+            ChangeState(TroopState.Moving);
         }
 
 
+        //NOTE: For testing in editor
 #if UNITY_EDITOR
 
         [ContextMenu("Force Init State")]

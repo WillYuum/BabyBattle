@@ -1,25 +1,21 @@
-using System.Collections.Generic;
-using GameplayUtils.Methods;
-using Troops;
+using GameplayUtils.Classes;
 using UnityEngine;
-using Utils.ArrayUtils;
 
 
 namespace Buildings
 {
-    public enum BuildingType { Buildable, TroopCamp, DefensiveWall };
+    public enum BuildingType { Buildable, TroopCamp, DefensiveWall, MainCamp };
 
     public class BuildingCore : MonoBehaviour
     {
-        protected FriendOrFoe _friendOrFoe;
-        [SerializeField] protected BuildingType _buildingType;
-
-        [SerializeField] protected BuildingUI _buildingUI;
+        public FriendOrFoe FriendOrFoe { get; private set; }
+        [field: SerializeField] protected BuildingType BuildingType { get; private set; }
+        protected HP _hp;
 
         void Awake()
         {
+            _hp = new HP(100);
             OnAwake();
-
         }
 
         protected virtual void OnAwake()
@@ -27,44 +23,9 @@ namespace Buildings
 
         }
 
-
-        public void Init(ConstructBuildingAction constructBuildingAction)
-        {
-            // _friendOrFoe = constructBuildingAction.FriendOrFoe;
-
-        }
-
-
         public virtual void DestroyBuilding()
         {
             Destroy(gameObject, 2.0f);
-        }
-
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (UtilMethods.CollidedWithPlayer(other))
-            {
-                _buildingUI.ToggleBuildingUI(true);
-            }
-            else if (other.TryGetComponent<Troop>(out var troop))
-            {
-                // OnTroopInteractWithBuilding(troop);
-            }
-        }
-
-        protected virtual void OnTroopInteractWithBuilding(ITroopBuildingInteraction troop)
-        {
-
-        }
-
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            if (UtilMethods.CollidedWithPlayer(other))
-            {
-                _buildingUI.ToggleBuildingUI(false);
-            }
         }
     }
 }

@@ -63,16 +63,16 @@ namespace Buildings.DefensiveWallComponent
 
 
 
-        protected override void OnTroopInteractWithBuilding(ITroopBuildingInteraction troop)
-        {
-            base.OnTroopInteractWithBuilding(troop);
+        // protected override void OnTroopInteractWithBuilding(ITroopBuildingInteraction troop)
+        // {
+        //     base.OnTroopInteractWithBuilding(troop);
 
-            if (_troops.Count < _idleTroopsPositions.Length)
-            {
-                _troops.Add(troop);
-                InvokeTroopIdleInBuilding(troop);
-            }
-        }
+        //     if (_troops.Count < _idleTroopsPositions.Length)
+        //     {
+        //         _troops.Add(troop);
+        //         InvokeTroopIdleInBuilding(troop);
+        //     }
+        // }
 
 
         private void InvokeTroopIdleInBuilding(ITroopBuildingInteraction troop)

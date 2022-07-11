@@ -17,8 +17,12 @@ namespace Troops.TroopClasses
                     DamagedByTroop = TroopType,
                 };
 
-                IDamageable damage = hit.collider.GetComponent<Troop>();
+                IDamageable damage = hit.collider.GetComponent<IDamageable>();
                 damage.TakeDamage(damageAction);
+            }
+            else
+            {
+                ChangeState(TroopState.Moving);
             }
         }
     }

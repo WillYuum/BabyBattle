@@ -1,31 +1,31 @@
 using UnityEngine;
+using Buildings;
 
-public class MainCamp : MonoBehaviour, IDamageable
+public class MainCamp : BuildingCore, IDamageable
 {
-    [Header("Variables")]
-    [SerializeField] private float _currentHealth = 100f;
     private EntityDirection _spawnDirection = EntityDirection.Left;
 
     [Header("References")]
-    [SerializeField] private MainCampUI _mainCampUI;
+    [SerializeField] private MainCampUI _campUi;
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        _mainCampUI.InitUI(new MainCampUI.InitConfig
+        base.OnAwake();
+
+        _campUi.InitUI(new MainCampUI.InitConfig
         {
             active = true,
-            startingHealth = _currentHealth / 100f,
+            startingHealth = _hp.GetHPPercentage(),
             onClickTroopCard = OnClickTroopCard
         });
     }
 
-
     public void TakeDamage(TakeDamageAction damageAction)
     {
-        _currentHealth -= damageAction.DamageAmount;
-        _mainCampUI.UpdateHealthBar(_currentHealth / 100f);
+        _hp.TakeDamage(damageAction.DamageAmount);
+        _campUi.UpdateHealthBar(_hp.GetHPPercentage());
 
-        if (_currentHealth <= 0)
+        if (_hp.CurrentHP <= 0)
         {
             Debug.Log("Building destroyed");
             GameloopManager.instance.MainBuildingDestroyed();

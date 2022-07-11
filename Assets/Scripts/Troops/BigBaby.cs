@@ -28,6 +28,10 @@ namespace Troops.TroopClasses
                     }
                 }
             }
+            else
+            {
+                ChangeState(TroopState.Moving);
+            }
         }
     }
 }

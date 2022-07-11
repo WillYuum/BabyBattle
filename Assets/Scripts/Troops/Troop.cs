@@ -100,14 +100,31 @@ namespace Troops
 
             if (collider == null || collider.gameObject == gameObject) return;
 
-            if (collider.TryGetComponent<Troop>(out Troop troop))
-            {
-                if (troop.FriendOrFoe != FriendOrFoe)
-                {
-                    if (TroopState == TroopState.Attacking) return;
 
-                    print(FriendOrFoe + "Troop found " + troop.FriendOrFoe);
-                    ChangeState(TroopState.Attacking);
+            if (collider.GetComponent<IDamageable>() != null)
+            {
+                if (collider.TryGetComponent<Troop>(out Troop troop))
+                {
+                    if (troop.FriendOrFoe != FriendOrFoe)
+                    {
+                        if (TroopState == TroopState.Attacking) return;
+
+                        print(FriendOrFoe + "Troop found " + troop.FriendOrFoe);
+                        ChangeState(TroopState.Attacking);
+                    }
+                }
+                else
+                {
+                    if (collider.TryGetComponent<BuildingCore>(out BuildingCore building))
+                    {
+                        if (building.FriendOrFoe != FriendOrFoe)
+                        {
+                            if (TroopState == TroopState.Attacking) return;
+
+                            print(FriendOrFoe + "Building found " + building.FriendOrFoe);
+                            ChangeState(TroopState.Attacking);
+                        }
+                    }
                 }
             }
         }

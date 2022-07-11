@@ -150,8 +150,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public void MainBuildingDestroyed()
     {
-        OnLoseGame?.Invoke();
-        OnLoseGame = null;
+        Invoke(nameof(LoseGame), 2.0f);
     }
 
 
@@ -222,8 +221,12 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
-    public void RestartGame()
+    public void LoseGame()
     {
+        OnLoseGame?.Invoke();
+        OnLoseGame = null;
+
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

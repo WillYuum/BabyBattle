@@ -23,9 +23,9 @@ namespace Buildings
 
         }
 
-        public virtual void DestroyBuilding()
+        protected void DestroyBuilding()
         {
-            Destroy(gameObject, 2.0f);
+            Destroy(gameObject);
         }
     }
 }

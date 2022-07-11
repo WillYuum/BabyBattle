@@ -28,6 +28,7 @@ public class MainCamp : BuildingCore, IDamageable
         if (_hp.CurrentHP <= 0)
         {
             Debug.Log("Building destroyed");
+            DestroyBuilding();
             GameloopManager.instance.MainBuildingDestroyed();
         }
     }

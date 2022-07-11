@@ -21,7 +21,7 @@ namespace HUDCore.Screens
 
         private void ClickedOnRestartGame()
         {
-            GameloopManager.instance.RestartGame();
+            GameloopManager.instance.LoseGame();
         }
     }
 }

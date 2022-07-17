@@ -1,6 +1,7 @@
 using UnityEngine;
 using GameplayUtils.Methods;
 using System.Collections.Generic;
+using Troops;
 
 namespace Territory
 {
@@ -21,6 +22,10 @@ namespace Territory
         [SerializeField] private GainMoreTroopsAbility[] troopAbility;
         [SerializeField] private GainToysAbility[] toyGeneratorAbility;
 
+        private int enemyCount = 0;
+        private int friendCount = 0;
+        private bool isInvokeRepeating = false;
+
 
         private void Awake()
         {
@@ -34,49 +39,95 @@ namespace Territory
             }
         }
 
-
-
-        public void TryTakeControl(ControlledBy beingControlledBy)
+        private void ToggleInvokeRepeating(bool enable)
         {
-            if (beingControlledBy == _controlledBy)
+            if (enable)
+            {
+                if (!isInvokeRepeating)
+                {
+                    InvokeRepeating(nameof(UpdateTerritoryControl), 0.0f, 1.0f);
+                    isInvokeRepeating = true;
+                }
+            }
+            else
+            {
+                if (isInvokeRepeating)
+                {
+                    CancelInvoke(nameof(UpdateTerritoryControl));
+                    isInvokeRepeating = false;
+                }
+            }
+        }
+
+
+        private void UpdateTerritoryControl()
+        {
+            if (friendCount > enemyCount)
+            {
+                _takeOverTerritoryController.GainControl();
+
+            }
+            else if (friendCount < enemyCount)
+            {
+                _takeOverTerritoryController.LoseControl();
+            }
+            else
+            {
+                //friendCount == enemyCount
+            }
+
+
+            var controlledBy = _takeOverTerritoryController.GetControlledBy();
+            if (controlledBy != ControlledBy.None)
+            {
+                _controlledBy = controlledBy;
+                HandleTerritoryChange(controlledBy);
+            }
+        }
+
+        private void HandleTerritoryChange(ControlledBy newController)
+        {
+            bool sameController = _controlledBy == newController;
+            if (sameController)
             {
                 return;
             }
 
 
-            if (_controlledBy == ControlledBy.None)
+            float controlRatio = _takeOverTerritoryController.Porgress;
+            bool hasControlledByFriends = controlRatio >= 1.0f && newController == ControlledBy.Friend;
+            if (hasControlledByFriends)
             {
-                //Gain control
-                _takeOverTerritoryController.GainControl();
+                _controlledBy = ControlledBy.Friend;
+                UnlockTerritoryAbilities();
             }
             else
             {
-                //Lose control
-                _takeOverTerritoryController.LoseControl();
-            }
-
-
-            float controlRatio = _takeOverTerritoryController.GetControlledRation();
-            if (controlRatio >= 1)
-            {
-                _controlledBy = beingControlledBy;
-
-                if (beingControlledBy == ControlledBy.Friend)
+                bool hasControlledByEnemies = controlRatio <= -1.0f && newController == ControlledBy.Foe;
+                if (hasControlledByEnemies)
                 {
-                    UnlockTerritoryAbilities();
-                }
-            }
-            else if (controlRatio < 0)
-            {
-                _controlledBy = ControlledBy.None;
-
-                if (beingControlledBy == ControlledBy.Foe)
-                {
+                    _controlledBy = ControlledBy.Foe;
                     LockTerritoryAbilities();
                 }
             }
 
-            SetFlagPosition(controlRatio);
+
+            UpdateTerritoryVisuals(Mathf.Abs(controlRatio));
+        }
+
+        private void UpdateTerritoryVisuals(float flagPositionRatio)
+        {
+            switch (_controlledBy)
+            {
+                case ControlledBy.Friend:
+                    break;
+                case ControlledBy.Foe:
+                    break;
+                case ControlledBy.None:
+                    break;
+            }
+
+            SetFlagPosition(flagPositionRatio);
         }
 
 
@@ -121,15 +172,20 @@ namespace Territory
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // if (UtilMethods.CollidedWithPlayer(other))
-            // {
-            //     //show UI
-            //     UI.SetActive(true);
+            if (other.gameObject.TryGetComponent<Troop>(out Troop troop))
+            {
+                if (troop.FriendOrFoe == FriendOrFoe.Foe)
+                {
+                    enemyCount++;
+                    ToggleInvokeRepeating(true);
+                }
+                else
+                {
+                    friendCount++;
+                    ToggleInvokeRepeating(true);
+                }
 
-            // GameloopManager.instance.UpdateHoveredTerritoryState(this);
-
-            //     CollectNewToys();
-            // }
+            }
         }
 
         private void CollectNewToys()
@@ -145,13 +201,22 @@ namespace Territory
 
         void OnTriggerExit2D(Collider2D other)
         {
-            // if (UtilMethods.CollidedWithPlayer(other))
-            // {
-            //     //hide UI
-            //     UI.SetActive(false);
+            if (other.gameObject.TryGetComponent<Troop>(out Troop troop))
+            {
+                if (troop.FriendOrFoe == FriendOrFoe.Foe)
+                {
+                    enemyCount--;
+                }
+                else
+                {
+                    friendCount--;
+                }
+            }
 
-            //     GameloopManager.instance.UpdateHoveredTerritoryState(null);
-            // }
+            if (enemyCount == 0 && friendCount == 0)
+            {
+                ToggleInvokeRepeating(false);
+            }
         }
     }
 
@@ -159,22 +224,49 @@ namespace Territory
     public class TakeOverTerritoryController
     {
         private float _durationToControl = 5f;
-        private float _currentDurationTillControl = 0f;
+
+        //Progress should be betweem -1 and 1
+        public float Porgress { get; private set; }
+
+        private float _progressScaleChange;
+
+        public TakeOverTerritoryController()
+        {
+            _progressScaleChange = 1 / _durationToControl;
+        }
 
         public void GainControl()
         {
-            _currentDurationTillControl += Time.deltaTime;
+            Porgress += _progressScaleChange;
+
+            if (Porgress >= 1)
+            {
+                Porgress = 1;
+            }
         }
 
 
         public void LoseControl()
         {
-            _currentDurationTillControl -= Time.deltaTime;
+            Porgress -= _progressScaleChange;
+
+            if (Porgress <= -1)
+            {
+                Porgress = -1;
+            }
         }
 
-        public float GetControlledRation()
+        public ControlledBy GetControlledBy()
         {
-            return _currentDurationTillControl / _durationToControl;
+            switch (Porgress)
+            {
+                case 1:
+                    return ControlledBy.Friend;
+                case -1:
+                    return ControlledBy.Foe;
+                default:
+                    return ControlledBy.None;
+            }
         }
     }
 }

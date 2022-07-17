@@ -231,17 +231,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
-    public void TryTakeOverTerritory(ControlledBy controlledBy)
-    {
-        if (HoveredTerritory == null)
-        {
-            Debug.LogWarning("No territory hovered");
-            return;
-        }
 
-        HoveredTerritory.TryTakeControl(controlledBy);
-
-    }
 
     public void IncreaseMaxAmountOfTroops(int amount)
     {

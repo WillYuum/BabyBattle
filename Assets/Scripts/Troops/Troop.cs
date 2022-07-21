@@ -23,7 +23,7 @@ namespace Troops
 
     public interface ITroopBuildingInteraction
     {
-        void MoveToIdlePositionInBuilding(Transform target);
+        void MoveToIdlePositionInBuilding(Vector3 targetPosition);
         void MoveOutOfBuilding(EntityDirection direction);
     }
 
@@ -193,6 +193,7 @@ namespace Troops
             _currentTroopState.ChangeState(_currentTroopState, this);
         }
 
+        //This should be private all the time
         private void GetControlledByGod(TroopState ControlledState, EntityDirection direction)
         {
             _currentTroopState = new ControlledByGodState();
@@ -216,11 +217,11 @@ namespace Troops
             // }
         }
 
-        public void MoveToIdlePositionInBuilding(Transform target)
+        public void MoveToIdlePositionInBuilding(Vector3 targetPosition)
         {
-            var direction = target.position.x > 0 ? EntityDirection.Right : EntityDirection.Left;
+            var direction = targetPosition.x > 0 ? EntityDirection.Right : EntityDirection.Left;
             GetControlledByGod(TroopState.Moving, direction);
-            transform.DOMove(target.position, 0.5f).OnComplete(() =>
+            transform.DOMove(targetPosition, 0.5f).OnComplete(() =>
             {
                 ChangeState(TroopState.Idle);
             });

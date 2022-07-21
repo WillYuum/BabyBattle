@@ -114,7 +114,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             troop.InitTroop(enemyCamp.AttackDirection);
 
             enemyCamp.GarrisonTroops(troop);
-            troop.GetComponent<ITroopBuildingInteraction>().MoveToIdlePositionInBuilding(enemyCamp.transform);
+            troop.GetComponent<ITroopBuildingInteraction>().MoveToIdlePositionInBuilding(enemyCamp.transform.position);
 
 
             troopsAdded++;

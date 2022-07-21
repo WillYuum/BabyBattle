@@ -78,7 +78,7 @@ namespace Buildings.DefensiveWallComponent
         private void InvokeTroopIdleInBuilding(ITroopBuildingInteraction troop)
         {
 
-            troop.MoveToIdlePositionInBuilding(_idleTroopsPositions.PickNext());
+            troop.MoveToIdlePositionInBuilding(_idleTroopsPositions.PickNext().position);
         }
 
     }

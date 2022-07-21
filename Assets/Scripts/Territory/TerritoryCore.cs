@@ -2,9 +2,11 @@ using UnityEngine;
 using GameplayUtils.Methods;
 using System.Collections.Generic;
 using Troops;
+using DG.Tweening;
 
 namespace Territory
 {
+
     public enum ControlledBy { None, Friend, Foe };
     public class TerritoryCore : MonoBehaviour
     {
@@ -22,9 +24,12 @@ namespace Territory
         [SerializeField] private GainMoreTroopsAbility[] troopAbility;
         [SerializeField] private GainToysAbility[] toyGeneratorAbility;
 
+        [SerializeField] private BoxCollider2D _collider;
+
         private int enemyCount = 0;
         private int friendCount = 0;
         private bool isInvokeRepeating = false;
+
 
 
         private void Awake()
@@ -83,6 +88,9 @@ namespace Territory
                 _controlledBy = controlledBy;
                 HandleTerritoryChange(controlledBy);
             }
+
+
+            UpdateTerritoryVisuals(Mathf.Abs(_takeOverTerritoryController.Porgress));
         }
 
         private void HandleTerritoryChange(ControlledBy newController)
@@ -110,9 +118,6 @@ namespace Territory
                     LockTerritoryAbilities();
                 }
             }
-
-
-            UpdateTerritoryVisuals(Mathf.Abs(controlRatio));
         }
 
         private void UpdateTerritoryVisuals(float flagPositionRatio)
@@ -135,7 +140,7 @@ namespace Territory
         {
             var flagPos = flag.transform.localPosition;
             flagPos.y = Mathf.Lerp(flagPositionPoints[0], flagPositionPoints[1], ratio);
-            flag.transform.localPosition = flagPos;
+            flag.transform.DOLocalMoveY(flagPos.y, _takeOverTerritoryController.ProgressScaleChange);
         }
 
         private void UnlockTerritoryAbilities()
@@ -172,6 +177,7 @@ namespace Territory
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            Debug.Log("Entering territory");
             if (other.gameObject.TryGetComponent<Troop>(out Troop troop))
             {
                 if (troop.FriendOrFoe == FriendOrFoe.Foe)
@@ -183,6 +189,16 @@ namespace Territory
                 {
                     friendCount++;
                     ToggleInvokeRepeating(true);
+                }
+
+                if (_troopsFightingForTerritory.Count < maxTroopFighting)
+                {
+                    _troopsFightingForTerritory.RemoveAll(v => v == null);
+                    if (!_troopsFightingForTerritory.Contains(troop))
+                    {
+                        _troopsFightingForTerritory.Add(troop);
+                        MoveTroopIntoDefensePosition(troop);
+                    }
                 }
 
             }
@@ -218,26 +234,39 @@ namespace Territory
                 ToggleInvokeRepeating(false);
             }
         }
+
+        private const int maxTroopFighting = 3;
+        private List<Troop> _troopsFightingForTerritory = new List<Troop>();
+        private void MoveTroopIntoDefensePosition(Troop troop)
+        {
+            if (_troopsFightingForTerritory.Count >= maxTroopFighting) return;
+
+            _troopsFightingForTerritory.Add(troop);
+
+            Vector2 controlPosition = transform.position;
+            controlPosition.y = troop.transform.position.y;
+            troop.MoveToIdlePositionInBuilding(controlPosition);
+        }
     }
 
 
     public class TakeOverTerritoryController
     {
-        private float _durationToControl = 5f;
+        private float _durationToControl = 8.5f;
 
         //Progress should be betweem -1 and 1
         public float Porgress { get; private set; }
 
-        private float _progressScaleChange;
+        public float ProgressScaleChange;
 
         public TakeOverTerritoryController()
         {
-            _progressScaleChange = 1 / _durationToControl;
+            ProgressScaleChange = 1 / _durationToControl;
         }
 
         public void GainControl()
         {
-            Porgress += _progressScaleChange;
+            Porgress += ProgressScaleChange;
 
             if (Porgress >= 1)
             {
@@ -248,7 +277,7 @@ namespace Territory
 
         public void LoseControl()
         {
-            Porgress -= _progressScaleChange;
+            Porgress -= ProgressScaleChange;
 
             if (Porgress <= -1)
             {
